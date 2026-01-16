@@ -1,0 +1,193 @@
+{
+  "id": "donor_mysterious",
+  "npc_name": "Anonymous Donor",
+  "npc_archetype": "shadow_donor",
+  "start": "intro",
+  "nodes": {
+    "intro": {
+      "speaker": "Anonymous Donor",
+      "text": "I represent certain... interests. We've been watching your campaign. We think you could go far.",
+      "choices": [
+        {
+          "text": "What kind of interests?",
+          "next": "vague_answer"
+        },
+        {
+          "text": "What do you want in return?",
+          "requires": {
+            "logic": 4
+          },
+          "next": "strings"
+        },
+        {
+          "text": "How much are we talking?",
+          "next": "money_talk"
+        },
+        {
+          "text": "I don't take mystery money.",
+          "effects": [
+            {
+              "op": "stat_add",
+              "stat": "legitimacy",
+              "amount": 2
+            },
+            {
+              "op": "trust_add",
+              "amount": -20
+            }
+          ],
+          "next": "refuse"
+        }
+      ]
+    },
+    "vague_answer": {
+      "speaker": "Anonymous Donor",
+      "text": "Business interests. Community interests. The kind of interests that benefit from... stability. And winners.",
+      "choices": [
+        {
+          "text": "I'm listening.",
+          "next": "money_talk"
+        },
+        {
+          "text": "This sounds shady.",
+          "next": "defend"
+        }
+      ]
+    },
+    "strings": {
+      "speaker": "Anonymous Donor",
+      "text": "Smart. We admire that. Nothing specific. Just... remember your friends when you're in office. That's all anyone asks.",
+      "effects": [
+        {
+          "op": "trust_add",
+          "amount": 5
+        }
+      ],
+      "choices": [
+        {
+          "text": "Sounds reasonable.",
+          "effects": [
+            {
+              "op": "stat_add",
+              "stat": "kapital",
+              "amount": 4
+            },
+            {
+              "op": "set_flag",
+              "flag": "took_dark_money"
+            }
+          ],
+          "next": "accept"
+        },
+        {
+          "text": "That's too vague. No deal.",
+          "effects": [
+            {
+              "op": "stat_add",
+              "stat": "legitimacy",
+              "amount": 1
+            }
+          ],
+          "next": "refuse"
+        }
+      ]
+    },
+    "money_talk": {
+      "speaker": "Anonymous Donor",
+      "text": "Enough to matter. Enough to win. Let's say... enough to drown {opponent_name} in advertising.",
+      "choices": [
+        {
+          "text": "Deal.",
+          "effects": [
+            {
+              "op": "stat_add",
+              "stat": "kapital",
+              "amount": 5
+            },
+            {
+              "op": "scandal_add",
+              "headline": "Dark money flows into campaign"
+            },
+            {
+              "op": "set_flag",
+              "flag": "took_dark_money"
+            }
+          ],
+          "next": "accept"
+        },
+        {
+          "text": "I need to think about it.",
+          "next": "pressure"
+        },
+        {
+          "text": "No. This isn't who I am.",
+          "effects": [
+            {
+              "op": "stat_add",
+              "stat": "legitimacy",
+              "amount": 2
+            }
+          ],
+          "next": "refuse"
+        }
+      ]
+    },
+    "pressure": {
+      "speaker": "Anonymous Donor",
+      "text": "Time is money, {player_name}. And right now, {opponent_name} has more of both. This offer won't last forever.",
+      "choices": [
+        {
+          "text": "Fine. I'll take it.",
+          "effects": [
+            {
+              "op": "stat_add",
+              "stat": "kapital",
+              "amount": 4
+            },
+            {
+              "op": "set_flag",
+              "flag": "took_dark_money"
+            }
+          ],
+          "next": "accept"
+        },
+        {
+          "text": "Then I'll lose on my own terms.",
+          "effects": [
+            {
+              "op": "stat_add",
+              "stat": "legitimacy",
+              "amount": 3
+            }
+          ],
+          "next": "refuse"
+        }
+      ]
+    },
+    "defend": {
+      "speaker": "Anonymous Donor",
+      "text": "Shady? Everything in politics is shady. We're just honest about it. The question is: do you want to win?",
+      "next": "money_talk"
+    },
+    "accept": {
+      "speaker": "Anonymous Donor",
+      "text": "Wise choice. The funds will be there by morning. Untraceable, of course. Good luck, {player_name}. We'll be in touch.",
+      "effects": [
+        {
+          "op": "trust_add",
+          "amount": 10
+        }
+      ]
+    },
+    "refuse": {
+      "speaker": "Anonymous Donor",
+      "text": "Your loss. Don't say we didn't offer. {opponent_name} wasn't so picky. Sleep well.",
+      "effects": [
+        {
+          "op": "trust_add",
+          "amount": -30
+        }
+      ]
+    }
+  }
+}

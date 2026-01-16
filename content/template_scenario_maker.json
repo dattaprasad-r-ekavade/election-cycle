@@ -1,0 +1,280 @@
+{
+  "_README": "ELECTION CYCLE - SCENARIO TEMPLATE FILE",
+  "_DESCRIPTION": "This template shows how to create custom content for Election Cycle. Copy this structure to scenario_maker.json and modify.",
+  "_VERSION": "1.0",
+  "=== STRUCTURE GUIDE ===": {
+    "npcs": "Define characters with personalities, archetypes, and visual descriptions",
+    "dialogues": "Conversation trees with branching choices and skill checks",
+    "scenarios": "Day-specific events that can be randomly selected",
+    "crises": "District problems that drive the narrative",
+    "opponents": "Your political rivals with their own personalities",
+    "news_templates": "Headlines and stories generated based on player actions",
+    "posters": "Campaign poster options for Day 3",
+    "donors": "Fundraiser characters for Day 4",
+    "events": "Town events for Day 5",
+    "debate_rounds": "Debate exchanges for Day 6"
+  },
+  "npcs": {
+    "_TEMPLATE_NPC": {
+      "id": "unique_npc_id",
+      "name": "Display Name",
+      "archetype": "schemer|narcissist|wildcard|enabler|patsy|delusional",
+      "description": "Brief visual/personality description shown to player",
+      "personality_traits": [
+        "trait1",
+        "trait2"
+      ],
+      "motivations": [
+        "what they want from the player"
+      ],
+      "speech_style": "How they talk - formal, slang, rambling, etc",
+      "trust_baseline": 0,
+      "can_endorse": true,
+      "endorsement_name": "Name shown when they endorse you",
+      "scandal_vulnerability": 0.5
+    }
+  },
+  "dialogues": {
+    "_TEMPLATE_DIALOGUE": {
+      "id": "unique_dialogue_id",
+      "npc_id": "reference to npc",
+      "trigger_day": 2,
+      "trigger_conditions": {
+        "min_skill": {
+          "kapital": 3
+        },
+        "flags_required": [
+          "some_flag"
+        ],
+        "flags_forbidden": [
+          "other_flag"
+        ]
+      },
+      "intro_text": "Opening description with [b]bold[/b] and [i]italic[/i] BBCode support",
+      "nodes": {
+        "start": {
+          "speaker": "NPC Name or 'narrator'",
+          "text": "What they say",
+          "choices": [
+            {
+              "text": "Player choice text [Skill Name]",
+              "skill_check": {
+                "skill": "speechcraft|kapital|influence|legitimacy|logic",
+                "difficulty": 10
+              },
+              "requires": {
+                "skill_name": 5
+              },
+              "success_next": "node_id_on_success",
+              "failure_next": "node_id_on_failure",
+              "next": "node_id_if_no_skill_check",
+              "effects": [
+                {
+                  "op": "trust_add",
+                  "amount": 20
+                },
+                {
+                  "op": "stat_add",
+                  "stat": "influence",
+                  "amount": 2
+                },
+                {
+                  "op": "promise_add",
+                  "id": "promise_example",
+                  "text": "Text of promise made"
+                },
+                {
+                  "op": "scandal_add",
+                  "headline": "Scandal headline if this causes one"
+                },
+                {
+                  "op": "scandal_risk_add",
+                  "id": "scandal_example",
+                  "chance": 0.3,
+                  "headline": "Potential scandal headline"
+                },
+                {
+                  "op": "endorsement_add",
+                  "name": "Endorser name"
+                },
+                {
+                  "op": "set_flag",
+                  "flag": "flag_name"
+                }
+              ]
+            }
+          ]
+        },
+        "another_node": {
+          "speaker": "NPC Name",
+          "text": "More dialogue",
+          "choices": []
+        }
+      }
+    }
+  },
+  "scenarios": {
+    "_TEMPLATE_SCENARIO": {
+      "id": "unique_scenario_id",
+      "day": 2,
+      "weight": 1.0,
+      "title": "Scenario Title",
+      "intro_text": "Scene description",
+      "npc_id": "optional - links to npc for trust tracking",
+      "choices": [
+        {
+          "text": "Choice text",
+          "skill_check": {
+            "skill": "speechcraft",
+            "difficulty": 8
+          },
+          "effects_on_success": [
+            {
+              "op": "trust_add",
+              "amount": 20
+            },
+            {
+              "op": "stat_add",
+              "stat": "influence",
+              "amount": 1
+            }
+          ],
+          "effects_on_failure": [
+            {
+              "op": "trust_add",
+              "amount": -10
+            },
+            {
+              "op": "scandal_add",
+              "headline": "Bad headline"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat_add",
+              "stat": "legitimacy",
+              "amount": 1
+            }
+          ]
+        }
+      ],
+      "issue_tags": [
+        "housing",
+        "corruption"
+      ],
+      "world_tags": [
+        "industrial"
+      ],
+      "tone_tags": [
+        "dark",
+        "absurd"
+      ],
+      "unique_per_run": false,
+      "cooldown_days": 0
+    }
+  },
+  "crises": {
+    "_TEMPLATE_CRISIS": {
+      "id": "crisis_id",
+      "name": "Crisis Display Name",
+      "description": "Longer description of the crisis",
+      "affected_groups": [
+        "workers",
+        "businesses",
+        "families"
+      ],
+      "hot_take_left": "Progressive position on this",
+      "hot_take_right": "Conservative position on this",
+      "neutral_dodge": "Vague non-answer position"
+    }
+  },
+  "opponents": {
+    "_TEMPLATE_OPPONENT": {
+      "id": "opponent_id",
+      "name_first": "First",
+      "name_last": "Last",
+      "archetype": "The Incumbent|The Outsider|The Failson|The True Believer",
+      "description": "Who they are",
+      "weakness": "Their exploitable flaw",
+      "strength": "What makes them dangerous",
+      "debate_style": "aggressive|defensive|chaotic|smug",
+      "scandal_history": [
+        "Past scandal 1",
+        "Past scandal 2"
+      ]
+    }
+  },
+  "posters": {
+    "_TEMPLATE_POSTER": {
+      "id": "poster_id",
+      "text": "What the poster says/shows",
+      "effects": [
+        {
+          "op": "stat_add",
+          "stat": "influence",
+          "amount": 2
+        },
+        {
+          "op": "stat_add",
+          "stat": "legitimacy",
+          "amount": -1
+        },
+        {
+          "op": "scandal_add",
+          "headline": "Optional scandal headline"
+        }
+      ],
+      "issue_tags": [
+        "housing"
+      ],
+      "world_tags": [
+        "tourist-town"
+      ],
+      "tone_tags": [
+        "absurd"
+      ],
+      "unique_per_run": false,
+      "cooldown_days": 0
+    }
+  },
+  "donors": {
+    "_TEMPLATE_DONOR": {
+      "id": "donor_scenario_id",
+      "intro_text": "Scene setup",
+      "npc_id": "optional link to NPC",
+      "choices": []
+    }
+  },
+  "events": {
+    "_TEMPLATE_EVENT": {
+      "id": "event_id",
+      "name": "Event Name",
+      "intro_text": "What's happening",
+      "choices": []
+    }
+  },
+  "debate_rounds": {
+    "_TEMPLATE_ROUND": {
+      "id": "round_id",
+      "round_number": 1,
+      "topic": "What the question is about",
+      "moderator_question": "The actual question",
+      "opponent_attack": "What your opponent says first",
+      "choices": []
+    }
+  },
+  "news_templates": {
+    "scandal_headlines": [
+      "{player_name} Caught {doing_bad_thing}",
+      "EXCLUSIVE: {player_name}'s {scandal_type} Exposed"
+    ],
+    "positive_headlines": [
+      "{player_name} Surges in Polls After {good_event}",
+      "Voters Respond to {player_name}'s {positive_trait}"
+    ],
+    "neutral_headlines": [
+      "Race Tightens in {district_name}",
+      "Both Candidates Make Final Push"
+    ]
+  }
+}

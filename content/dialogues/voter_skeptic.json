@@ -1,0 +1,193 @@
+{
+  "id": "voter_skeptic",
+  "npc_name": "Skeptical Voter",
+  "npc_archetype": "skeptic",
+  "start": "greeting",
+  "nodes": {
+    "greeting": {
+      "speaker": "Skeptical Voter",
+      "text": "Oh great, another politician at my door. What do you want?",
+      "choices": [
+        {
+          "text": "I'm here to listen to what matters to you.",
+          "requires": {
+            "speechcraft": 4
+          },
+          "effects": [
+            {
+              "op": "trust_add",
+              "amount": 10
+            }
+          ],
+          "next": "listen_response"
+        },
+        {
+          "text": "I want to talk about {crisis}.",
+          "next": "crisis_response"
+        },
+        {
+          "text": "Your vote could make the difference.",
+          "skill_check": {
+            "skill": "legitimacy",
+            "difficulty": 10
+          },
+          "success_next": "vote_success",
+          "failure_next": "vote_failure"
+        },
+        {
+          "text": "Forget it, I'll try next door.",
+          "effects": [
+            {
+              "op": "trust_add",
+              "amount": -5
+            }
+          ],
+          "next": "leave"
+        }
+      ]
+    },
+    "listen_response": {
+      "speaker": "Skeptical Voter",
+      "text": "Huh. Most of you just talk. Fine... I'm worried about {crisis}. What are you actually going to do about it?",
+      "choices": [
+        {
+          "text": "I have a detailed plan. Let me explain.",
+          "requires": {
+            "logic": 5
+          },
+          "effects": [
+            {
+              "op": "trust_add",
+              "amount": 15
+            },
+            {
+              "op": "set_flag",
+              "flag": "explained_plan"
+            }
+          ],
+          "next": "plan_response"
+        },
+        {
+          "text": "We need to work together as a community.",
+          "effects": [
+            {
+              "op": "trust_add",
+              "amount": 5
+            }
+          ],
+          "next": "community_response"
+        }
+      ]
+    },
+    "crisis_response": {
+      "speaker": "Skeptical Voter",
+      "text": "Yeah, everyone wants to 'talk about it.' What makes you different from {opponent_name}?",
+      "choices": [
+        {
+          "text": "I actually live in this district. I'm affected too.",
+          "effects": [
+            {
+              "op": "trust_add",
+              "amount": 10
+            }
+          ],
+          "next": "local_response"
+        },
+        {
+          "text": "I have the money to actually make changes.",
+          "requires": {
+            "kapital": 6
+          },
+          "effects": [
+            {
+              "op": "trust_add",
+              "amount": 5
+            },
+            {
+              "op": "scandal_add",
+              "headline": "Candidate flaunts wealth"
+            }
+          ],
+          "next": "money_response"
+        }
+      ]
+    },
+    "vote_success": {
+      "speaker": "Skeptical Voter",
+      "text": "You know what? You might be right. I'll think about it.",
+      "effects": [
+        {
+          "op": "trust_add",
+          "amount": 20
+        }
+      ],
+      "next": "end_positive"
+    },
+    "vote_failure": {
+      "speaker": "Skeptical Voter",
+      "text": "That's what they all say. My vote never matters anyway.",
+      "effects": [
+        {
+          "op": "trust_add",
+          "amount": -10
+        }
+      ],
+      "next": "end_neutral"
+    },
+    "plan_response": {
+      "speaker": "Skeptical Voter",
+      "text": "Okay... that actually makes some sense. I'm not saying I believe you, but at least you've thought about it.",
+      "effects": [
+        {
+          "op": "trust_add",
+          "amount": 10
+        },
+        {
+          "op": "promise_add",
+          "id": "promise_address_{crisis}",
+          "text": "Address {crisis}"
+        }
+      ],
+      "next": "end_positive"
+    },
+    "community_response": {
+      "speaker": "Skeptical Voter",
+      "text": "Community. Right. Good luck with that.",
+      "next": "end_neutral"
+    },
+    "local_response": {
+      "speaker": "Skeptical Voter",
+      "text": "Fair point. {opponent_name} doesn't even live here. Still doesn't mean you'll actually do anything.",
+      "effects": [
+        {
+          "op": "trust_add",
+          "amount": 10
+        }
+      ],
+      "next": "end_neutral"
+    },
+    "money_response": {
+      "speaker": "Skeptical Voter",
+      "text": "Money, huh? Where's that money coming from? Never mind, I don't want to know.",
+      "next": "end_neutral"
+    },
+    "leave": {
+      "speaker": "Skeptical Voter",
+      "text": "*slams door*"
+    },
+    "end_positive": {
+      "speaker": "Skeptical Voter",
+      "text": "Alright, you've got my attention. Don't make me regret it.",
+      "effects": [
+        {
+          "op": "trust_add",
+          "amount": 5
+        }
+      ]
+    },
+    "end_neutral": {
+      "speaker": "Skeptical Voter",
+      "text": "We'll see. Good luck out there."
+    }
+  }
+}

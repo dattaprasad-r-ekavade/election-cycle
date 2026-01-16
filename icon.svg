@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <rect width="128" height="128" fill="#1a1d23"/>
+  <circle cx="64" cy="50" r="30" fill="#4a90d9" opacity="0.8"/>
+  <rect x="34" y="75" width="60" height="40" fill="#d9534f" opacity="0.8"/>
+  <text x="64" y="58" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle">EC</text>
+  <text x="64" y="102" font-family="Arial, sans-serif" font-size="10" fill="white" text-anchor="middle">VOTE</text>
+</svg>

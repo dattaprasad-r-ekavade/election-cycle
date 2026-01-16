@@ -1,0 +1,99 @@
+Action points you can hand to yourself (or whoever’s building systems) based on your current `scenario_maker.json`. 
+
+## Engine + Data Contract (must-do)
+
+1. **Standardize effects into one format**
+
+* Replace `effect`, `success_effect`, `failure_effect` with:
+
+  * `effects` (no check)
+  * `effects_on_success`
+  * `effects_on_failure`
+* Make each one an **array of ops** (even if it’s one op). 
+
+2. **Separate “requires” vs “skill_check” rules**
+
+* `requires` = hard gate (hide/disable choice)
+* `skill_check` = roll for success/failure branch
+  Enforce this strictly in validation. 
+
+3. **Make stat keys canonical**
+
+* Only allow: `speechcraft, kapital, influence, legitimacy, logic`
+* Reject any unknown stat field in content at load time. 
+
+4. **Fix Trust ambiguity**
+
+* Decide one:
+
+  * Trust is **per NPC only** (then posters can’t add trust), OR
+  * Posters affect a global metric like `district_support` / `voter_enthusiasm` instead.
+    Right now posters like `poster_rat` change `trust` without an NPC context. 
+
+5. **Promises must have IDs (not just text)**
+
+* Convert `"promise": "Solve rat problem"` into:
+
+  * `promise_add: { id, text }`
+* This is required for contradictions, debate callouts, and endgame explanations. 
+
+6. **Unify scandal handling**
+
+* You currently mix `scandal`, `scandal_chance`, and `scandal_potential`. 
+  Make it one of:
+* `scandal_add` (immediate headline)
+* `scandal_risk_add` (tag + probability)
+  …and handle all scandal generation through one system.
+
+---
+
+## Procedural + Replay (high leverage)
+
+7. **Add tags for seed-based picking**
+   Add optional tags on everything (scenarios/posters/events/fundraisers/debate rounds):
+
+* `issue_tags` (housing, corruption, opioids, etc.)
+* `world_tags` (tourist-town, industrial, etc.)
+* `tone_tags` (absurd, mean, wholesome, dark) 
+
+8. **Add “unique per run / cooldown” controls**
+
+* `unique_per_run: true`
+* `cooldown_days: N`
+  Prevents the same scene from repeating too often.
+
+9. **Debate should pull attacks from your run history**
+
+* If `set_flag: ate_evidence` happened, the opponent can reference it.
+* Same for `fled_mcpoyles`, `owns_boat`, etc. 
+  This makes Day 6 feel “earned,” not scripted.
+
+---
+
+## Tooling + Validation (save future-you)
+
+10. **Strict schema validation on load**
+    Fail fast if:
+
+* duplicate IDs
+* missing referenced `npc_id`
+* unknown fields inside effects
+* invalid day numbers
+* invalid difficulty types
+* invalid placeholders (e.g., `{opponent_name}` used where not supported) 
+
+11. **Normalize old content in a loader bridge**
+    If you don’t want to rewrite all content now:
+
+* Loader converts `effect` → `effects[]`
+* `success_effect/failure_effect` → arrays
+* `promise` → `promise_add` with auto-generated ID (temporary)
+* `scandal_chance/scandal_potential` → unified scandal risk ops
+  Keep the engine clean even if content is mixed.
+
+12. **Add a dev “event log” for news + endgame explainability**
+    Whenever effects apply, log structured events like:
+
+* `promise_made`, `endorsement_gained`, `scandal_triggered`, `poster_placed`, `donor_taken`
+  News templates can then react to what actually happened. 
+

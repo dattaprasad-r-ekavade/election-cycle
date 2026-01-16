@@ -1,0 +1,34 @@
+# Godot 4+ specific ignores
+.godot/
+
+# Godot-specific ignores
+*.translation
+
+# Imported textures and samples
+.import/
+
+# Exported build files
+*.export/
+export/
+build/
+html/
+
+# IDE-specific files
+.idea/
+*.swp
+*.swo
+*~
+.vscode/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Backup files
+*.bak

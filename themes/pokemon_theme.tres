@@ -1,0 +1,97 @@
+[gd_resource type="Theme" load_steps=7 format=3 uid="uid://dv1bv25j0xp5x"]
+
+[sub_resource type="StyleBoxFlat" id="button_disabled"]
+bg_color = Color(0.7, 0.7, 0.7, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.4, 0.4, 0.4, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="button_hover"]
+bg_color = Color(0.9, 0.95, 1, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.2, 0.4, 0.8, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="button_normal"]
+bg_color = Color(0.96, 0.96, 0.88, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.2, 0.2, 0.2, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="button_pressed"]
+bg_color = Color(0.8, 0.85, 0.95, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.1, 0.2, 0.5, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="lineedit_normal"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2, 0.2, 0.2, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="panel_style"]
+bg_color = Color(0.96, 0.96, 0.88, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.2, 0.2, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0.1, 0.1, 0.1, 0.3)
+shadow_size = 4
+shadow_offset = Vector2(3, 3)
+
+[resource]
+default_font_size = 16
+Button/colors/font_color = Color(0.1, 0.1, 0.1, 1)
+Button/colors/font_disabled_color = Color(0.4, 0.4, 0.4, 1)
+Button/colors/font_hover_color = Color(0.1, 0.2, 0.6, 1)
+Button/colors/font_pressed_color = Color(0, 0.1, 0.4, 1)
+Button/font_sizes/font_size = 18
+Button/styles/disabled = SubResource("button_disabled")
+Button/styles/hover = SubResource("button_hover")
+Button/styles/normal = SubResource("button_normal")
+Button/styles/pressed = SubResource("button_pressed")
+Label/colors/font_color = Color(0.1, 0.1, 0.1, 1)
+Label/font_sizes/font_size = 16
+LineEdit/colors/caret_color = Color(0.1, 0.1, 0.1, 1)
+LineEdit/colors/font_color = Color(0.1, 0.1, 0.1, 1)
+LineEdit/font_sizes/font_size = 16
+LineEdit/styles/normal = SubResource("lineedit_normal")
+PanelContainer/styles/panel = SubResource("panel_style")
+RichTextLabel/colors/default_color = Color(0.1, 0.1, 0.1, 1)
+RichTextLabel/font_sizes/normal_font_size = 16

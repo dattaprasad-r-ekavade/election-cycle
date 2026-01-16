@@ -1,0 +1,187 @@
+[gd_scene load_steps=3 format=3 uid="uid://byveycm5yla35"]
+
+[ext_resource type="Script" uid="uid://4wfiqqv2e3ph" path="res://scripts/game.gd" id="1_script"]
+[ext_resource type="Theme" path="res://themes/pokemon_theme.tres" id="2_theme"]
+
+[node name="Game" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.15, 0.25, 0.35, 1)
+
+[node name="TopBar" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 15.0
+offset_top = 10.0
+offset_right = -15.0
+offset_bottom = 55.0
+grow_horizontal = 2
+
+[node name="HBox" type="HBoxContainer" parent="TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="DayLabel" type="Label" parent="TopBar/HBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 18
+text = "► DAY 1 - REGISTRATION"
+
+[node name="Spacer" type="Control" parent="TopBar/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SkillsHBox" type="HBoxContainer" parent="TopBar/HBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Speechcraft" type="Label" parent="TopBar/HBox/SkillsHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.3, 0.3, 1)
+text = "SPE:3"
+
+[node name="Kapital" type="Label" parent="TopBar/HBox/SkillsHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.6, 0.3, 1)
+text = "KAP:3"
+
+[node name="Influence" type="Label" parent="TopBar/HBox/SkillsHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.4, 0.7, 1)
+text = "INF:3"
+
+[node name="Legitimacy" type="Label" parent="TopBar/HBox/SkillsHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.5, 0.2, 1)
+text = "LEG:3"
+
+[node name="Logic" type="Label" parent="TopBar/HBox/SkillsHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.3, 0.6, 1)
+text = "LOG:3"
+
+[node name="MainContent" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = 60.0
+offset_right = -15.0
+offset_bottom = -70.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ContentPanel" type="PanelContainer" parent="MainContent"]
+layout_mode = 2
+
+[node name="ContentMargin" type="MarginContainer" parent="MainContent/ContentPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 12
+
+[node name="ContentContainer" type="VBoxContainer" parent="MainContent/ContentPanel/ContentMargin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderPanel" type="PanelContainer" parent="MainContent/ContentPanel/ContentMargin/ContentContainer"]
+layout_mode = 2
+
+[node name="HeaderMargin" type="MarginContainer" parent="MainContent/ContentPanel/ContentMargin/ContentContainer/HeaderPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+
+[node name="HeaderVBox" type="VBoxContainer" parent="MainContent/ContentPanel/ContentMargin/ContentContainer/HeaderPanel/HeaderMargin"]
+layout_mode = 2
+
+[node name="DayTitle" type="Label" parent="MainContent/ContentPanel/ContentMargin/ContentContainer/HeaderPanel/HeaderMargin/HeaderVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.4, 0.7, 1)
+theme_override_font_sizes/font_size = 22
+text = "═══ DAY ACTIVITY ═══"
+horizontal_alignment = 1
+
+[node name="DayDescription" type="Label" parent="MainContent/ContentPanel/ContentMargin/ContentContainer/HeaderPanel/HeaderMargin/HeaderVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.4, 0.4, 1)
+theme_override_font_sizes/font_size = 13
+text = "\"Description of today's activity...\""
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ActivityPanel" type="PanelContainer" parent="MainContent/ContentPanel/ContentMargin/ContentContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActivityMargin" type="MarginContainer" parent="MainContent/ContentPanel/ContentMargin/ContentContainer/ActivityPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="ActivityContent" type="VBoxContainer" parent="MainContent/ContentPanel/ContentMargin/ContentContainer/ActivityPanel/ActivityMargin"]
+layout_mode = 2
+
+[node name="ActivityText" type="RichTextLabel" parent="MainContent/ContentPanel/ContentMargin/ContentContainer/ActivityPanel/ActivityMargin/ActivityContent"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0.15, 0.15, 0.15, 1)
+bbcode_enabled = true
+text = "Activity content will appear here..."
+
+[node name="ChoicesContainer" type="VBoxContainer" parent="MainContent/ContentPanel/ContentMargin/ContentContainer/ActivityPanel/ActivityMargin/ActivityContent"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BottomBar" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = -60.0
+offset_right = -15.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="HBox" type="HBoxContainer" parent="BottomBar"]
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="BottomBar/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "DISTRICT: [Name] | CRISIS: [Crisis]"
+
+[node name="Spacer" type="Control" parent="BottomBar/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NextDayButton" type="Button" parent="BottomBar/HBox"]
+custom_minimum_size = Vector2(160, 38)
+layout_mode = 2
+text = "► NEXT DAY"
+
+[connection signal="pressed" from="BottomBar/HBox/NextDayButton" to="." method="_on_next_day_pressed"]
