@@ -112,7 +112,7 @@ func _populate_ui() -> void:
 			modifiers_container.add_child(mod_label)
 	
 	# Probability
-	var prob_percent := current_check_data.probability * 100
+	var prob_percent: float = current_check_data.probability * 100
 	probability_bar.value = prob_percent
 	probability_label.text = "%.0f%% CHANCE" % prob_percent
 	
@@ -199,7 +199,7 @@ func _show_result() -> void:
 	if has_two_dice:
 		var d1: int = current_result.roll_values[0]
 		var d2: int = current_result.roll_values[1]
-		var used := current_result.final_roll
+		var used: int = current_result.final_roll
 		if d1 == used:
 			dice_label.text = "🎲 [%d]  🎲 %d" % [d1, d2]
 		else:
