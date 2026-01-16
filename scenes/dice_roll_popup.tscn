@@ -1,0 +1,161 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqxdc8k4mjy3r"]
+
+[ext_resource type="Script" path="res://scripts/dice_roll_popup.gd" id="1_popup"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bar"]
+bg_color = Color(0.3, 0.6, 0.3, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="DiceRollPopup" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_popup")
+
+[node name="Overlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/Panel/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "⚔️ SPEECHCRAFT CHECK ⚔️"
+horizontal_alignment = 1
+
+[node name="DescriptionLabel" type="Label" parent="CenterContainer/Panel/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Convince the union rep you're pro-labor"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/Panel/MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="SkillInfo" type="Label" parent="CenterContainer/Panel/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Base Speechcraft: 6 | Difficulty: 12 (Medium)"
+horizontal_alignment = 1
+
+[node name="ModifiersContainer" type="VBoxContainer" parent="CenterContainer/Panel/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ProbabilityContainer" type="HBoxContainer" parent="CenterContainer/Panel/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ProbabilityBar" type="ProgressBar" parent="CenterContainer/Panel/MarginContainer/VBox/ProbabilityContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/fill = SubResource("StyleBoxFlat_bar")
+max_value = 100.0
+value = 50.0
+show_percentage = false
+
+[node name="ProbabilityLabel" type="Label" parent="CenterContainer/Panel/MarginContainer/VBox/ProbabilityContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "50% CHANCE"
+
+[node name="AdvantageLabel" type="Label" parent="CenterContainer/Panel/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "✦ ADVANTAGE (Roll 2d10, take higher)"
+horizontal_alignment = 1
+
+[node name="VoiceLabel" type="RichTextLabel" parent="CenterContainer/Panel/MarginContainer/VBox"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+bbcode_enabled = true
+text = "[i]\"You can talk your way out of this. You've done it before.\"[/i]"
+fit_content = true
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="CenterContainer/Panel/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="RollButton" type="Button" parent="CenterContainer/Panel/MarginContainer/VBox/ButtonsContainer"]
+custom_minimum_size = Vector2(150, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "🎲 ROLL THE DICE"
+
+[node name="BackButton" type="Button" parent="CenterContainer/Panel/MarginContainer/VBox/ButtonsContainer"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+text = "✖ BACK OUT"
+
+[node name="ResultContainer" type="VBoxContainer" parent="CenterContainer/Panel/MarginContainer/VBox"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="DiceLabel" type="Label" parent="CenterContainer/Panel/MarginContainer/VBox/ResultContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "🎲 7"
+horizontal_alignment = 1
+
+[node name="BreakdownLabel" type="Label" parent="CenterContainer/Panel/MarginContainer/VBox/ResultContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "7 (roll) + 6 (Speechcraft) + 0 (mods) = 13 vs 12"
+horizontal_alignment = 1
+
+[node name="ResultLabel" type="Label" parent="CenterContainer/Panel/MarginContainer/VBox/ResultContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "✓ SUCCESS"
+horizontal_alignment = 1
+
+[node name="ResultVoiceLabel" type="RichTextLabel" parent="CenterContainer/Panel/MarginContainer/VBox/ResultContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+bbcode_enabled = true
+text = "[i]\"Your words land. They actually believe you.\"[/i]"
+fit_content = true
+
+[node name="ContinueButton" type="Button" parent="CenterContainer/Panel/MarginContainer/VBox/ResultContainer"]
+visible = false
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "► CONTINUE"

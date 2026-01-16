@@ -23,6 +23,7 @@ SkillSystem="*res://systems/skill_system.gd"
 DialogueSystem="*res://systems/dialogue_system.gd"
 NewsSystem="*res://systems/news_system.gd"
 ContentLoader="*res://systems/content_loader.gd"
+DiceRollSystem="*res://systems/dice_roll_system.gd"
 
 [display]
 

@@ -3,6 +3,7 @@ extends Control
 ## Main Game Scene - Handles day activities and game loop
 ## "The Gang Runs For Office"
 ## Now loads content from scenario_maker.json via ContentLoader
+## Integrates dramatic dice roll system
 
 @onready var day_label: Label = $TopBar/HBox/DayLabel
 @onready var day_title: Label = $MainContent/ContentPanel/ContentMargin/ContentContainer/HeaderPanel/HeaderMargin/HeaderVBox/DayTitle
@@ -18,6 +19,14 @@ extends Control
 @onready var influence_label: Label = $TopBar/HBox/SkillsHBox/Influence
 @onready var legitimacy_label: Label = $TopBar/HBox/SkillsHBox/Legitimacy
 @onready var logic_label: Label = $TopBar/HBox/SkillsHBox/Logic
+
+# Seed display (dynamically created)
+var seed_label: Label
+
+# Dice roll popup
+var dice_popup: Control
+var pending_choice: Dictionary = {}
+var pending_choice_index: int = -1
 
 # Day activity data
 const DAY_ACTIVITIES := {
@@ -44,6 +53,16 @@ func _ready() -> void:
 	DialogueSystem.dialogue_line.connect(_on_dialogue_line)
 	DialogueSystem.choices_presented.connect(_on_choices_presented)
 	DialogueSystem.dialogue_ended.connect(_on_dialogue_ended)
+	
+	# Load and add dice roll popup
+	var popup_scene := load("res://scenes/dice_roll_popup.tscn")
+	dice_popup = popup_scene.instantiate()
+	dice_popup.roll_accepted.connect(_on_dice_roll_accepted)
+	dice_popup.roll_declined.connect(_on_dice_roll_declined)
+	add_child(dice_popup)
+	
+	# Create seed display in top bar
+	_create_seed_display()
 
 	_update_skill_display()
 	_update_status_bar()
@@ -222,28 +241,91 @@ func _on_choice_selected(index: int) -> void:
 		return
 
 	var choice: Dictionary = current_choices[index]
-	var result_text := ""
 
+	# If choice has skill check, show dice popup
 	if choice.has("skill_check"):
 		var check: Dictionary = choice.skill_check
-		var result := SkillSystem.roll_skill_check(check.skill, check.difficulty)
+		pending_choice = choice
+		pending_choice_index = index
+		
+		# Build context for modifiers
+		var context := {
+			"npc_id": current_npc_id,
+			"description": _replace_placeholders(choice.get("text", "Make a skill check"))
+		}
+		
+		# Show dice popup
+		dice_popup.show_check(check.skill, check.difficulty, context.description, context)
+		return
+	
+	# No skill check - apply effects directly
+	_apply_choice_directly(choice)
 
-		if result.success:
-			result_text = "[color=green]► SUCCESS![/color] (Rolled %d + %d = %d vs %d)\n\n" % [result.roll, result.skill_value, result.total, result.difficulty]
-			if choice.has("effects_on_success"):
-				_apply_choice_effects(choice.effects_on_success)
-		else:
-			result_text = "[color=red]► FAILED![/color] (Rolled %d + %d = %d vs %d)\n\n" % [result.roll, result.skill_value, result.total, result.difficulty]
-			if choice.has("effects_on_failure"):
-				_apply_choice_effects(choice.effects_on_failure)
+
+func _on_dice_roll_accepted(result: Dictionary) -> void:
+	"""Handle dice roll completion"""
+	var choice := pending_choice
+	var result_text := ""
+	
+	if result.is_crit_success:
+		result_text = "[color=gold]★ CRITICAL SUCCESS! ★[/color]\n"
+	elif result.is_crit_failure:
+		result_text = "[color=red]✖ CRITICAL FAILURE! ✖[/color]\n"
+	elif result.success:
+		result_text = "[color=green]✓ SUCCESS[/color]\n"
 	else:
-		result_text = "[color=yellow]►[/color] "
-		if choice.has("effects"):
-			_apply_choice_effects(choice.effects)
+		result_text = "[color=red]✗ FAILURE[/color]\n"
+	
+	result_text += "[i]\"%s\"[/i]\n\n" % result.flavor_text
+	result_text += "Rolled %d + %d (%s)" % [result.final_roll, result.skill_value, result.skill_display]
+	if result.total_modifier != 0:
+		result_text += " %+d (modifiers)" % result.total_modifier
+	result_text += " = %d vs %d\n\n" % [result.total, result.difficulty]
+	
+	# Apply effects based on result
+	if result.success:
+		if choice.has("effects_on_success"):
+			_apply_choice_effects(choice.effects_on_success)
+		# Critical success bonus
+		if result.is_crit_success:
+			result_text += "[color=gold]Bonus from critical![/color]\n"
+			GameManager.add_district_support(5)
+	else:
+		if choice.has("effects_on_failure"):
+			_apply_choice_effects(choice.effects_on_failure)
+		# Critical failure extra penalty
+		if result.is_crit_failure:
+			result_text += "[color=red]Scandal risk from critical failure![/color]\n"
+			GameManager.add_scandal_risk({
+				"id": "crit_fail_%d" % GameManager.current_day,
+				"chance": 0.5,
+				"headline": "Campaign Gaffe Goes Viral"
+			})
+	
+	_log_activity_event(choice)
+	activity_text.text = result_text
+	_clear_choices()
+	next_day_button.disabled = false
+	pending_choice = {}
+	pending_choice_index = -1
 
+
+func _on_dice_roll_declined() -> void:
+	"""Player backed out of dice roll"""
+	# Just close popup, choices remain visible
+	pending_choice = {}
+	pending_choice_index = -1
+
+
+func _apply_choice_directly(choice: Dictionary) -> void:
+	"""Apply a non-skill-check choice directly"""
+	var result_text := "[color=yellow]►[/color] "
+	if choice.has("effects"):
+		_apply_choice_effects(choice.effects)
+	
 	_log_activity_event(choice)
 	result_text += "You selected: " + _replace_placeholders(choice.get("text", "..."))
-
+	
 	activity_text.text = result_text
 	_clear_choices()
 	next_day_button.disabled = false
@@ -374,6 +456,21 @@ func _update_skill_display() -> void:
 	influence_label.text = "INF:%d" % SkillSystem.get_skill("influence")
 	legitimacy_label.text = "LEG:%d" % SkillSystem.get_skill("legitimacy")
 	logic_label.text = "LOG:%d" % SkillSystem.get_skill("logic")
+
+
+func _create_seed_display() -> void:
+	"""Create seed display label in top bar"""
+	var top_bar_hbox: HBoxContainer = $TopBar/HBox
+	
+	# Create seed label
+	seed_label = Label.new()
+	seed_label.text = "SEED:%d" % GameManager.run_seed
+	seed_label.add_theme_font_size_override("font_size", 11)
+	seed_label.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
+	seed_label.tooltip_text = "Run seed - same seed generates same scenarios"
+	
+	# Add at the end of the top bar
+	top_bar_hbox.add_child(seed_label)
 
 
 func _update_status_bar() -> void:

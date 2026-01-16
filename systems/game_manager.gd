@@ -63,8 +63,8 @@ func start_new_game(seed_value: int = 0) -> void:
 	run_seed = seed_value
 	seed(run_seed)
 
-	# Reset state
-	current_day = 0
+	# Reset state - Day 1 is character creation
+	current_day = 1
 	promises_made.clear()
 	promises_broken.clear()
 	scandals.clear()
@@ -88,7 +88,8 @@ func start_new_game(seed_value: int = 0) -> void:
 	game_started.emit()
 
 	print("[GameManager] New game started with seed: %d" % run_seed)
-	advance_day()
+	# Note: Day 1 is character creation. advance_day() is called when player clicks Start.
+
 
 
 func _generate_district() -> void:
