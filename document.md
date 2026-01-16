@@ -1,547 +1,761 @@
-Product Description — Election Cycle
-High-Concept
-Election Cycle is a satirical 2D political RPG where you have 7 in-game days to win an election in a procedurally generated district.
-You don’t win by being right.
-You win by using the right SKILL.
-Each run drops you into a new neighborhood with new people, new issues, a new opponent, and a new crisis. You walk the streets, talk to NPCs, make promises, contradict yourself, spend money, manipulate optics, and survive a public debate — all before election day.
-At the end of the week, the votes are counted.
-You win, you lose, or you lose in a way that makes sense.
-Then the city resets.
+# ELECTION CYCLE
+## Game Design Document v2.0
+**Last Updated:** January 17, 2026  
+**Target Release:** November 2026  
+**Revenue Target:** $10,000 USD (Year 1)
 
-Tone & Identity
-Absurdist satire, not preachy politics
-Inspired by Always Sunny–style humor
-No “correct” ideology
-Everyone (including the player) is flawed
-Systems expose contradictions instead of judging them
-The comedy comes from outcomes, not punchlines.
+---
 
-Core Gameplay Loop
-Wake up in a procedurally generated district
-Explore a compact city block
-Talk to NPCs with distinct issues and personalities
-Make dialogue choices tied to your SKILL stats
-Trigger events, scandals, endorsements, and side tasks
-Prepare for the public debate (Day 6)
-Election results roll in (Day 7)
-District resets with a new seed
+# 🎯 EXECUTIVE SUMMARY
 
- Core Systems
- SKILL System (Player Attributes)
-A political RPG stat system inspired by SPECIAL, reimagined as SKILL:
-S — Speechcraft
-How convincing you sound in arguments and debates
-K — Kapital 
-Campaign money, donors, and financial leverage
-I — Influence
-Passive reach, reputation, and media momentum
-L — Legitimacy
-Whether people believe you should be in power
-L — Logic
-Consistency of your positions and resistance to contradictions
-Each stat unlocks different dialogue options, not just higher success rates.
-No build is “correct.”
-Every build creates different problems.
+## The Pitch (30 seconds)
+**Election Cycle** is a satirical political roguelite where you have **7 days to win an election** in a procedurally generated district. You don't win by being right—you win by using the right **SKILL**.
 
- Dialogue System (Table-Based, System-Driven)
-Dialogue is the game’s combat system.
-Conversations are modular “scenes”
-Each scene contains:
-NPC context
-Dialogue lines
-Multiple choices
-SKILL-tagged outcomes
-Choices affect:
-NPC trust
-Global perception
-Hidden flags (promises, contradictions, scandals)
-Designed to be:
-Highly replayable
-AI-generated at scale
-Safe to remix via seeds
+Think *Disco Elysium* meets *Papers, Please* meets *It's Always Sunny in Philadelphia*.
 
- Seeded District Generation
-Each run is defined by a seed composed of:
-City theme
-Main crisis
-NPC distribution
-Dominant issues
-Opponent archetype
-Media bias
-The city layout, NPC traits, events, and dialogue pools are mixed and matched, not fully random — ensuring replayability without chaos.
+## Why This Will Sell
+| Hook | Player Appeal |
+|------|---------------|
+| **Short runs (20-30 min)** | Perfect for busy adults, streamers |
+| **Procedural replayability** | Every run is different |
+| **Dark comedy without preaching** | Appeals across political spectrum |
+| **SKILL system creates stories** | "I won by lying to everyone" is shareable |
+| **Debate as boss fight** | Clear climax, viewer-friendly |
 
-Debate System (Boss Encounter)
-On Day 6, you face your opponent in a public debate.
-Multi-round structure
-Each round tests a different SKILL stat
-Crowd and media react dynamically
-Performance depends on:
-Past promises
-Logic consistency
-Influence momentum
-Kapital spent before/after
-The debate doesn’t decide everything — but it amplifies what you’ve already done.
+## Comparable Titles (Comp Analysis)
+| Game | Similarity | Their Success |
+|------|------------|---------------|
+| **Disco Elysium** | Skill-based dialogue, satirical | 2M+ copies |
+| **Papers, Please** | Moral choices, short sessions | 5M+ copies |
+| **Not Tonight** | Political satire, paperwork | 500K+ copies |
+| **Yes, Your Grace** | Decision-making, consequences | 300K+ copies |
 
- Endgame Resolution
-Election results are calculated, not scripted.
-Factors include:
-District support
-Voter enthusiasm
-Broken promises
-Scandals
-Debate performance
-Influence snowballing
-Players should lose and say:
-“Yeah… that tracks.”
+**Our niche:** Political satire + roguelite runs. No direct competitor.
 
- AI-Assisted Content Pipeline
-AI is used as a content multiplier, not a designer.
-AI generates:
-Dialogue variants
-NPC flavor text
-Event descriptions
-Satirical headlines
-Opponent rhetoric
-The game enforces:
-Strict data formats
-Tagged outcomes
-Schema validation
-Manual polish passes
-This allows:
-Fast content scaling
-Consistent tone
-Safe procedural remixing
+---
 
- Key Features (Player-Facing)
-Procedurally generated districts with handcrafted logic
-Deep dialogue-driven gameplay
-Political satire without real-world parties or candidates
-Multiple playstyles and builds
-High replayability with short runs
-Streamer-friendly systems and outcomes
-Single-player, offline
-UI similar to pokemon for reference
+# 🎮 HIGH CONCEPT
 
- Tech Stack
-Engine
-Godot 4.x (Stable)
-2D / 2.5D presentation
-Windows-only build (initial release)
-Programming
-GDScript
-Modular, system-first architecture
-Strong separation of logic, UI, and content
-Tools & Workflow
-Godot Editor (runtime, scene composition)
-VS Code (primary coding environment)
-GitHub Copilot / AI tools for boilerplate and content tooling
-JSON-based content files
-Custom content validation tools (dev mode)
-Platform
-Steam (Windows)
-Steam demo planned
-Optional Steamworks features post-launch
+## One-Line Pitch
+> *"Election Cycle is a satirical political RPG where winning isn't about truth—it's about which SKILL you're willing to abuse before election day."*
 
-Project Philosophy (Why This Will Ship)
-Systems over spectacle
-Data over hardcoded content
-Satire through mechanics
-AI-assisted, human-polished
-Scoped for a solo developer
+## Core Fantasy
+The player is a **cynical political operative** running for local office. They know the system is broken. They're going to exploit it anyway.
 
-One-Line Elevator Pitch
-Election Cycle is a satirical political RPG where winning isn’t about truth — it’s about which SKILL you’re willing to abuse before election day.
+**The player should feel:**
+- Clever when they manipulate
+- Guilty when they compromise
+- Amused when the system punishes them fairly
+- Motivated to try a different approach
 
+## Tone & Identity
+| Element | Description |
+|---------|-------------|
+| **Humor style** | Absurdist, Always Sunny-esque |
+| **Political stance** | None—everyone is flawed |
+| **Comedy source** | Outcomes, not punchlines |
+| **Violence** | None (scandals are the damage) |
+| **Mature content** | Political corruption, lying, manipulation |
 
+**ESRB Target:** Teen (Language, Simulated Gambling [Kapital mechanics], Mild Suggestive Themes)
 
- 7-Day Core Loop — Election Cycle
-Each day introduces a different pressure vector, so the player can’t solve everything with one stat.
-The goal is not realism — it’s exposing tradeoffs.
+---
 
-Day 1 — Registration
-“Who are you pretending to be?”
-Purpose
-Establish identity
-Lock starting constraints
-Set expectations
-Player Actions
-Choose name, look, campaign flavor
-Allocate starting SKILL points
-Review:
-Opponent profile
-District theme
-Main crisis
-Media bias
-Systems Impact
-Sets:
-Initial Legitimacy
-Starting Kapital
-Hidden expectations (high legitimacy = less forgiveness later)
-Satire Angle
-Registration forms already judge you
-Opponent bio feels suspiciously curated
-AI Content Use
-Opponent backstory
-District description
-Media framing blurbs
+# 📊 MARKET & REVENUE STRATEGY
 
-Day 2 — Canvassing
-“Say it to their face.”
-Purpose
-Establish grassroots support
-Learn district issues
-Build or burn trust early
-Player Actions
-Visit houses
-Talk to NPCs
-Make early promises
-Gather issue intel
-Primary SKILL Tested
-Speechcraft
-Legitimacy
-Logic (early contradictions start here)
-Failure Is OK
-Being awkward now may help later (low expectations)
-AI Content Use
-NPC archetype dialogue
-Issue hooks
-Early skepticism lines
+## Target Audience
 
-Day 3 — Posters
-“How do you look from a distance?”
-Purpose
-Control Optics without saying Optics
-Introduce passive Influence
-Player Actions
-Design campaign poster:
-Slogan
-Tone
-Focus (policy / emotion / vague promise)
-Place posters
-Ask NPCs for reactions
-Primary SKILL Tested
-Influence
-Logic (does slogan match promises?)
-Legitimacy
-System Twist
-Posters boost Influence
-Bad messaging creates delayed backlash
-Satire Angle
-NPCs interpret posters wildly differently
-AI Content Use
-Slogans
-Reactions
-Media commentary
+### Primary: "The Cynical Gamer" (Ages 25-40)
+- Employed, limited gaming time
+- Appreciates dark humor
+- Watches political content (but exhausted by it)
+- Plays: Disco Elysium, Hades, Slay the Spire, Papers Please
+- Platforms: Steam (Windows), possibly Mac later
 
-Day 4 — Fundraiser
-“Who owns you?”
-Purpose
-Introduce Kapital as power and poison
-Create future debt
-Player Actions
-Call donors
-Choose:
-Clean funding
-Questionable funding
-Desperation funding
-Decide how transparent to be
-Primary SKILL Tested
-Kapital
-Legitimacy
-Logic (strings attached)
-Hidden Consequences
-Donors demand favors later
-Media may investigate
-AI Content Use
-Donor personalities
-Conditions
-Subtle threats
+### Secondary: "The Streamer Audience"
+- Viewers want **reactions** and **stories**
+- Short runs = good stream pacing
+- Skill checks create tension
+- Debate = dramatic finale
 
-Day 5 — Town Event
-“Perform in public.”
-Purpose
-Stress test your build
-Force tradeoffs in real time
-Player Actions
-Attend event (festival, rally, protest, ceremony)
-Choose where to spend attention
-Handle interruptions
-Primary SKILL Tested
-Speechcraft
-Influence
-Legitimacy
-Chaos Factor
-Random events
-NPCs confront you with past promises
-Satire Angle
-Doing nothing can be the safest choice
-AI Content Use
-Event flavor
-Crowd reactions
-Unexpected incidents
+## Revenue Model: $10,000 Year 1
 
-Day 6 — Debate
-“Everything comes due.”
-Purpose
-Boss fight
-Reveal contradictions
-Lock narrative momentum
-Structure
-Multi-round:
-Opening (Influence)
-Policy (Speechcraft)
-Attack/Defense (Logic)
-Credibility (Legitimacy)
-Media Aftermath (Kapital)
-Key Rule
-Debate does not create strength
-It amplifies what already exists
-AI Content Use
-Opponent rhetoric
-Moderator questions
-Media spin
+### Pricing Strategy
+| Price Point | Rationale |
+|-------------|-----------|
+| **$12.99 USD** | Sweet spot for indie roguelites |
+| Launch discount: **$9.99 (23% off)** | Drives launch week buys |
+| Sale floor: **$6.49 (50% off)** | Steam seasonal sales |
 
-Day 7 — Results
-“The math doesn’t care how you feel.”
-Purpose
-Payoff
-Reflection
-Motivation to replay
-What Happens
-Votes counted district-by-district
-News reports explain why you won/lost
-Epilogue based on:
-Promises kept/broken
-Scandals
-Donor influence
-Public trust
-Replay Hook
-“What if I leaned harder into Kapital?”
-“What if I stayed logically consistent?”
-“What if I embraced chaos?”
+### Sales Math
+| Scenario | Price | Units Needed | Steam Cut (30%) | Net to Dev |
+|----------|-------|--------------|-----------------|------------|
+| All full price | $12.99 | 1,100 | $4,290 | $10,000 |
+| Mixed (avg $9) | $9.00 | 1,590 | $4,770 | $10,000 |
+| All on sale | $6.49 | 2,200 | $4,290 | $10,000 |
 
- NEWS SYSTEM (THE GLUE)
-News runs every night between days.
-What news does
-Summarizes player actions
-Reframes them (sometimes unfairly)
-Foreshadows consequences
-Nudges player planning
-Types of News
-Local headlines
-Opinion columns
-Anonymous leaks
-Poll numbers
-Rumors (true or false)
-Important Rule
-News is not objective.
-It reflects media bias + your Influence + Kapital.
-AI Content Sweet Spot
-Headlines
-Opinion blurbs
-Satirical misinterpretations
+**Realistic target: ~1,500-2,000 copies Year 1**
 
-WHY THIS LOOP IS EXCELLENT
-Each day:
-Tests different SKILL stats
-Introduces new risk
-No single stat solves everything
-AI content fits naturally
-Seed-based remixing is easy
-Streamers get clear “episodes”
-This loop is ship-ready design.
+### Wishlist Strategy
+| Milestone | Target Date | Goal |
+|-----------|-------------|------|
+| Steam page live | August 2026 | Start collecting |
+| Demo release | September 2026 | Convert wishlists |
+| Launch | November 2026 | 2,000+ wishlists |
 
-WEEK-BY-WEEK TIMELINE
-Start: 12 Jan 2026
-End: 30 Nov 2026
-Weekly time: ~17–18 hrs
-Experience assumption: Senior JS dev, new to Godot
+**Industry average:** 10-20% of wishlists convert at launch.  
+**Need:** 10,000-20,000 wishlists for safe $10k.  
+**Achievable via:** Streamer coverage, Reddit, Twitter/X, demo virality.
 
- PHASE 0 — GODOT ORIENTATION (Weeks 1–2)
-Goal: Translate your JS instincts into Godot concepts
-This is NOT “learning programming” — it’s learning where things live
+---
 
-Week 1 (Jan 12–18) — Godot Mental Model (Fast Track)
-Focus: Engine concepts only
-Learn (quickly):
-Scene = component tree (think React component)
-Node = instance with lifecycle
-Signals = events/callbacks
-Control nodes = DOM + CSS layout
-Build (hands-on):
-Menu scene
-Button → signal → function
-Scene switching
-Deliverable
-Main menu → start game → back
-You’re comfortable navigating the editor
-⏱️ This should feel easy.
+# 🕹️ CORE GAMEPLAY LOOP
 
-Week 2 (Jan 19–25) — GDScript ≈ JS Brain Mapping
-Focus: Writing real code immediately
-Do
-Write:
-GameManager (autoload singleton)
-Day counter
-Global state
-Load JSON from disk
-Print parsed data
-Deliverable
-Game boots → loads content → prints data
-You trust GDScript syntax
- From here onward, treat Godot like any other runtime.
+## Session Flow (20-30 minutes)
+```
+┌─────────────────────────────────────────────────────┐
+│  DAY 1: Registration                                │
+│  → Choose name, allocate SKILL points               │
+│  → See district, opponent, crisis                   │
+├─────────────────────────────────────────────────────┤
+│  DAY 2-5: Campaign Activities                       │
+│  → Each day has unique challenge                    │
+│  → Choices affect stats, trust, scandals            │
+│  → Evening news reflects your actions               │
+├─────────────────────────────────────────────────────┤
+│  DAY 6: The Debate (Boss Fight)                     │
+│  → Multi-round confrontation                        │
+│  → Past decisions resurface                         │
+│  → Crowd/media react                                │
+├─────────────────────────────────────────────────────┤
+│  DAY 7: Election Results                            │
+│  → Votes calculated from all factors                │
+│  → Win/lose epilogue                                │
+│  → "What if..." replay hooks                        │
+└─────────────────────────────────────────────────────┘
+```
 
- PHASE 1 — CORE SYSTEMS (Weeks 3–8)
-Goal: Systems > content
-Output: Days 1–3 playable end-to-end
+## Why 7 Days?
+- **Digestible:** Player can learn the loop in one run
+- **Varied:** Each day tests different skills
+- **Memorable:** Day structure creates narrative rhythm
+- **Replayable:** Short enough to immediately try again
 
-Week 3 — Project Architecture Lock
-Focus: Prevent rewrites later
-Set up
+---
+
+# ⚔️ THE SKILL SYSTEM
+
+## Stats Overview
+A political reimagining of SPECIAL (Fallout) as **SKILL**:
+
+| Stat | Full Name | Governs | Playstyle |
+|------|-----------|---------|-----------|
+| **S** | Speechcraft | Debate performance, persuasion | The Orator |
+| **K** | Kapital | Money, donors, ads, bribes | The Machine |
+| **I** | Influence | Media coverage, reputation, reach | The Celebrity |
+| **L** | Legitimacy | Trust, credentials, authority | The Statesman |
+| **L** | Logic | Consistency, catching contradictions | The Honest One |
+
+## Design Principles
+1. **No stat is "correct"** — every build creates unique problems
+2. **Stats unlock options, not just success rates** — high Kapital opens bribery dialogue
+3. **Stats conflict** — high Legitimacy makes scandals hurt more
+4. **Visible consequences** — players understand why they won/lost
+
+## Stat Interactions (Examples)
+| Situation | High Stat Advantage | Low Stat Disadvantage |
+|-----------|--------------------|-----------------------|
+| Caught in contradiction | High Logic: "I evolved my position" | Low Logic: Scandal |
+| Donor wants favor | High Kapital: More options | Low Kapital: Desperate choices |
+| Media investigates | High Influence: Spin it | Low Influence: Story runs |
+| Opponent attacks credentials | High Legitimacy: Deflect | Low Legitimacy: Damage |
+
+---
+
+# 🎲 DICE ROLL SYSTEM (The Gamble)
+
+> *"Politics is gambling with other people's futures."*
+
+The dice roll is the **core tension mechanic** of Election Cycle. It must feel **dramatic**, **visible**, and **consequential**—like Disco Elysium's internal checks meet Baldur's Gate 3's cinematic dice.
+
+## Design Philosophy
+
+| Inspiration | What We Take | What We Adapt |
+|-------------|--------------|---------------|
+| **Disco Elysium** | Skill checks as internal tension, percentage shown, skills "speak" | Political skills, not psychological |
+| **Baldur's Gate 3** | Visible dice, dramatic reveal, modifier breakdown | D10 (not D20), political modifiers |
+| **Original** | Stakes feel PERSONAL (your career, not combat) | Reputation is HP |
+
+## Core Mechanic: The Political Check
+
+```
+┌─────────────────────────────────────────────────┐
+│          ⚔️ SPEECHCRAFT CHECK ⚔️                │
+│                                                  │
+│   "Convince the union rep you're pro-labor"     │
+│                                                  │
+│   BASE SKILL:     Speechcraft 6                 │
+│   ─────────────────────────────────────         │
+│   MODIFIERS:                                    │
+│   ► Promised jobs yesterday      +2             │
+│   ► Took corporate donor money   -3             │
+│   ► Wearing union pin            +1             │
+│   ─────────────────────────────────────         │
+│   TOTAL MODIFIER:               +0              │
+│   DIFFICULTY:                   12              │
+│                                                  │
+│   ┌─────────────────────────────────┐           │
+│   │  SUCCESS CHANCE: 50%           │           │
+│   │  ████████████░░░░░░░░░░░░      │           │
+│   └─────────────────────────────────┘           │
+│                                                  │
+│   [ 🎲 ROLL THE DICE ]   [ ✖ BACK OUT ]        │
+└─────────────────────────────────────────────────┘
+```
+
+### Formula
+```
+d10 + Skill Value + Modifiers ≥ Difficulty = SUCCESS
+```
+
+### Difficulty Tiers
+| Difficulty | Name | % Success (Skill 5, no mods) |
+|------------|------|------------------------------|
+| 8 | Trivial | 80% |
+| 10 | Easy | 60% |
+| 12 | Medium | 40% |
+| 14 | Hard | 20% |
+| 16 | Very Hard | 10% (need modifiers) |
+| 18+ | Nearly Impossible | Requires stacking bonuses |
+
+## Modifiers: Your Actions Matter
+
+Every choice builds or destroys your dice odds. This is **visible causality**.
+
+### Positive Modifiers
+| Source | Modifier | Example |
+|--------|----------|---------|
+| Kept a promise | +1 to +3 | "You promised housing reform—they remember" |
+| Endorsement | +2 | "The union endorses you—workers trust you" |
+| High related SKILL | +1 per 2 points above 5 | "Your Legitimacy lends weight" |
+| Matching flags | +1 to +2 | "You've been consistent on this issue" |
+| Spent Kapital | +1 to +3 | "Your campaign ad is playing everywhere" |
+
+### Negative Modifiers
+| Source | Modifier | Example |
+|--------|----------|---------|
+| Broke a promise | -2 to -4 | "You promised the opposite last week" |
+| Active scandal | -2 | "The bribery story is still running" |
+| Contradicted yourself | -1 to -3 | "Your Logic is failing you" |
+| Opponent smear ad | -1 | "They ran an attack ad this morning" |
+| Low trust with NPC | -1 to -3 | "They don't believe you anymore" |
+
+## Advantage & Disadvantage (Disco + BG3 Hybrid)
+
+Certain conditions grant **Advantage** (roll 2d10, take higher) or **Disadvantage** (roll 2d10, take lower).
+
+### Advantage Triggers
+| Condition | Flavor Text |
+|-----------|-------------|
+| NPC trusts you highly (+50) | *"They want to believe you."* |
+| Promise directly matches check | *"You've already committed to this."* |
+| Opponent just had a scandal | *"They're distracted by their own mess."* |
+| Media bias in your favor | *"The press is on your side today."* |
+
+### Disadvantage Triggers
+| Condition | Flavor Text |
+|-----------|-------------|
+| NPC distrusts you (-50) | *"They've heard your lies before."* |
+| Direct contradiction active | *"Your words are coming back to haunt you."* |
+| Opponent endorsed by this group | *"They've already chosen a side."* |
+| Active scandal about this topic | *"The headlines are still fresh."* |
+
+### Probability Impact
+| Roll Type | P(≥7 on d10) | Advantage | Disadvantage |
+|-----------|--------------|-----------|--------------|
+| Normal | 40% | 64% | 16% |
+| Need ≥5 | 60% | 84% | 36% |
+| Need ≥9 | 20% | 36% | 4% |
+
+**Advantage nearly doubles success. Disadvantage nearly halves it.**
+
+## Critical Outcomes
+
+| Roll | Name | Effect |
+|------|------|--------|
+| **Natural 10** | **Critical Success** | Bonus effect + memorable headline |
+| **Natural 1** | **Critical Failure** | Extra penalty + scandal risk |
+
+### Critical Success Examples
+- **Speechcraft crit:** Opponent is speechless. Gain +5 Influence.
+- **Kapital crit:** Donor is so impressed they double their contribution.
+- **Logic crit:** You expose opponent's contradiction. They lose trust.
+
+### Critical Failure Examples
+- **Speechcraft crit-fail:** You say something offensive. Viral clip.
+- **Kapital crit-fail:** Donation paper trail leaked to press.
+- **Logic crit-fail:** You contradict yourself live on camera.
+
+## The Roll Experience (UX Flow)
+
+### 1. Pre-Roll (Tension Building)
+```
+┌────────────────────────────────────────┐
+│  💬 SPEECHCRAFT wants to speak...      │
+│                                         │
+│  "You can talk your way out of this.   │
+│   You've done it before. But they're   │
+│   watching closely this time."         │
+│                                         │
+│  Success: They'll trust you.           │
+│  Failure: They'll remember this.       │
+│                                         │
+│  [ 50% CHANCE ]                        │
+│                                         │
+│  [ TRY IT ] [ BACK DOWN ]              │
+└────────────────────────────────────────┘
+```
+
+### 2. The Roll (Dramatic Reveal)
+```
+┌────────────────────────────────────────┐
+│                                         │
+│            🎲 ROLLING...               │
+│                                         │
+│         ┌─────────────────┐            │
+│         │                 │            │
+│         │       7         │            │
+│         │                 │            │
+│         └─────────────────┘            │
+│                                         │
+│   7 + 6 (Speechcraft) + 0 (mods) = 13  │
+│                                         │
+│        vs DIFFICULTY 12                │
+│                                         │
+│   ═══════════════════════════════════  │
+│         ✓ SUCCESS                      │
+│   ═══════════════════════════════════  │
+│                                         │
+└────────────────────────────────────────┘
+```
+
+### 3. Post-Roll (Consequence)
+```
+┌────────────────────────────────────────┐
+│                                         │
+│  ✓ SPEECHCRAFT succeeded.              │
+│                                         │
+│  "Your words land. For once, they      │
+│   actually believe you. Or at least,   │
+│   they believe you believe it."        │
+│                                         │
+│  ► Trust +10 with Maria Chen           │
+│  ► Flag set: union_speech_success      │
+│                                         │
+│  [ CONTINUE ]                          │
+└────────────────────────────────────────┘
+```
+
+## Probability Analysis: Before vs After Enhancement
+
+### Before (Current Hidden System)
+- Roll happens behind simple "SUCCESS/FAILED" text
+- Modifiers not visible to player
+- No advantage/disadvantage
+- Crits not implemented
+
+| Aspect | Current State |
+|--------|---------------|
+| Player understanding | Low—feels random |
+| Tension | Minimal—just click and see |
+| Replayability driver | Weak—"I'll try again I guess" |
+| Streamer appeal | Low—nothing to watch |
+| Causality feeling | Weak—why did it fail? |
+
+### After (Enhanced Visible System)
+- Full modifier breakdown shown
+- Percentage displayed before roll
+- Advantage/disadvantage with 2d10
+- Critical outcomes with headlines
+- Skills "speak" like Disco Elysium
+
+| Aspect | Enhanced State |
+|--------|----------------|
+| Player understanding | High—see exactly why |
+| Tension | High—gambling feeling |
+| Replayability driver | Strong—"I'll stack modifiers differently" |
+| Streamer appeal | High—visible drama, reactions |
+| Causality feeling | Strong—my choices mattered |
+
+### Success Probability Impact
+
+**Scenario: Skill 5, Difficulty 12**
+
+| System | Base | With +3 mods | With Advantage | With Both |
+|--------|------|--------------|----------------|-----------|
+| **Before** | 40% | 40% (hidden) | N/A | N/A |
+| **After** | 40% | 70% | 64% | 84% |
+
+**Key insight:** Player SEES the 40% → 84% improvement from their choices. This creates the "I earned this" feeling.
+
+## Why This Is Critical for $10k Target
+
+| Feature | Revenue Impact |
+|---------|----------------|
+| Visible dice | Screenshot/GIF worthy → social sharing |
+| Modifier breakdown | "Big brain" plays → Reddit posts |
+| Advantage/disadvantage | Risk/reward choices → replayability |
+| Critical outcomes | Memorable moments → word of mouth |
+| Skill voices | Personality → reviews mention it |
+
+**Baldur's Gate 3 taught the market that visible dice = engagement.**  
+**Disco Elysium taught writers that skills can have personality.**  
+**We combine both for political drama.**
+
+---
+
+# 📅 7-DAY STRUCTURE
+
+## Day 1 — Registration
+**Quote:** *"Who are you pretending to be?"*
+
+| Element | Details |
+|---------|---------|
+| **Purpose** | Establish identity, set constraints |
+| **Player Actions** | Name, slogan, allocate SKILL points |
+| **Information Revealed** | Opponent profile, district theme, main crisis, media bias |
+| **System Impact** | Sets starting Legitimacy expectations |
+| **Satire Angle** | Registration forms already judge you |
+
+## Day 2 — Canvassing
+**Quote:** *"Say it to their face."*
+
+| Element | Details |
+|---------|---------|
+| **Purpose** | Grassroots support, learn issues |
+| **Player Actions** | Visit houses, talk to NPCs, make promises |
+| **Skills Tested** | Speechcraft, Legitimacy, Logic |
+| **Risk** | Early contradictions start here |
+| **Satire Angle** | Being awkward now may help later (low expectations) |
+
+## Day 3 — Posters
+**Quote:** *"How do you look from a distance?"*
+
+| Element | Details |
+|---------|---------|
+| **Purpose** | Control optics, build Influence |
+| **Player Actions** | Choose poster design, slogan, placement |
+| **Skills Tested** | Influence, Logic (does slogan match promises?) |
+| **Risk** | Bad messaging creates delayed backlash |
+| **Satire Angle** | NPCs interpret posters wildly differently |
+
+## Day 4 — Fundraiser
+**Quote:** *"Who owns you?"*
+
+| Element | Details |
+|---------|---------|
+| **Purpose** | Kapital as power AND poison |
+| **Player Actions** | Choose donors: Clean / Questionable / Desperation |
+| **Skills Tested** | Kapital, Legitimacy, Logic |
+| **Risk** | Donors demand favors, media may investigate |
+| **Satire Angle** | Every dollar has strings attached |
+
+## Day 5 — Town Event
+**Quote:** *"Perform in public."*
+
+| Element | Details |
+|---------|---------|
+| **Purpose** | Stress test your build |
+| **Player Actions** | Attend event, handle interruptions, manage crowd |
+| **Skills Tested** | Speechcraft, Influence, Legitimacy |
+| **Risk** | NPCs confront you with past promises |
+| **Satire Angle** | Doing nothing can be the safest choice |
+
+## Day 6 — The Debate (Boss Fight)
+**Quote:** *"Everything comes due."*
+
+| Element | Details |
+|---------|---------|
+| **Purpose** | Climax—all contradictions surface |
+| **Structure** | Multi-round: Opening (Influence) → Policy (Speechcraft) → Attack/Defense (Logic) → Credibility (Legitimacy) → Aftermath (Kapital) |
+| **Key Rule** | Debate amplifies existing strength/weakness |
+| **Risk** | Opponent references your run history |
+| **Satire Angle** | Truth doesn't matter, perception does |
+
+## Day 7 — Results
+**Quote:** *"The math doesn't care how you feel."*
+
+| Element | Details |
+|---------|---------|
+| **Purpose** | Payoff, reflection, replay motivation |
+| **What Happens** | Votes counted, news explains outcome, epilogue based on choices |
+| **Win Condition** | More than 50% support |
+| **Replay Hooks** | "What if I leaned into Kapital?" / "What if I stayed consistent?" |
+
+---
+
+# 📰 NEWS SYSTEM (The Glue)
+
+News runs every night between days. It's the **feedback mechanism** that makes consequences visible.
+
+## What News Does
+- Summarizes player actions (sometimes unfairly)
+- Foreshadows consequences
+- Reflects media bias + player Influence + Kapital
+- Creates dramatic irony ("I know why they're saying that")
+
+## News Types
+| Type | Example |
+|------|---------|
+| **Local headline** | "New Candidate Promises Change" |
+| **Opinion column** | "Can We Trust Their Promises?" |
+| **Poll numbers** | "Race Tightens: 48% - 47%" |
+| **Anonymous leak** | "Sources Say Candidate Met With Developers" |
+| **Rumor (true/false)** | "Is Candidate Hiding Third Marriage?" |
+
+**Important:** News is NOT objective. It's another system to manipulate.
+
+---
+
+# 🎨 VISUAL STYLE
+
+## Art Direction
+| Element | Approach |
+|---------|----------|
+| **Style** | Pixel art, Pokémon-inspired top-down |
+| **Resolution** | 320x180 upscaled, chunky pixels |
+| **Color palette** | Muted with accent colors per district |
+| **Character design** | Simple, readable at small size |
+| **Animation** | Minimal—walk cycles, idle, talk |
+
+## UI Philosophy
+| Principle | Implementation |
+|-----------|----------------|
+| **Clear hierarchy** | Stats always visible in top bar |
+| **Readable text** | Large fonts, high contrast |
+| **Feedback** | Every choice shows immediate result |
+| **Pokemon inspiration** | Menu boxes, choice lists, simple transitions |
+
+## Scope Control (Art)
+| Include | Exclude |
+|---------|---------|
+| Town map (1-2 screens) | Complex interiors |
+| ~10 NPC sprites | Animated cutscenes |
+| 5-10 building exteriors | 3D effects |
+| Simple UI elements | Particle systems |
+
+---
+
+# 🔧 TECHNICAL SPECIFICATION
+
+## Engine & Platform
+| Spec | Choice |
+|------|--------|
+| **Engine** | Godot 4.4 (stable) |
+| **Language** | GDScript |
+| **Primary platform** | Windows (Steam) |
+| **Future platforms** | Mac, Linux (post-launch if viable) |
+| **Resolution** | 1280x720 base, scales up |
+
+## Architecture
+```
 /systems
-  skill_system.gd
-  dialogue_system.gd
-  seed_system.gd
-/ui
+  game_manager.gd      # Day loop, state, effects
+  skill_system.gd      # SKILL stats and checks
+  dialogue_system.gd   # Conversation engine
+  news_system.gd       # Headline generation
+  content_loader.gd    # JSON content pipeline
+
+/scripts
+  main_menu.gd
+  character_creation.gd
+  game.gd
+
+/scenes
+  main_menu.tscn
+  character_creation.tscn
+  game.tscn
+  town.tscn (spatial layer)
+
 /content
-/tools
+  scenario_maker.json   # All scenarios, NPCs, events
+  dialogues/            # NPC conversation trees
+```
 
-Build
-Global GameState
-Save/load stub
-Debug overlay
-Deliverable
-Clean, scalable structure
+## Content Pipeline
+All content is **JSON-based** for:
+- Easy AI-assisted content generation
+- Modding potential (future)
+- Rapid iteration without code changes
 
-Week 4 — SKILL System (Full)
-Implement all 5 stats
-Point allocation
-Modifiers
-Debug UI
-Deliverable
-Stats change, persist, affect logic
+---
 
-Week 5 — Dialogue Data + Loader
-Define strict JSON schema
-Dialogue scenes
-Choices + effects
-Deliverable
-Dialogue renders from data
+# 📈 DEVELOPMENT TIMELINE (Revised)
 
-Week 6 — Dialogue Runner + Effects
-Choice selection
-SKILL checks
-NPC trust
-Flags
-Deliverable
-Dialogue does something
+**Current Status:** January 17, 2026 — **68% complete**  
+**Current State:** Full 7-day loop playable (text-based, no spatial layer)
 
-Week 7 — Seeded Scene Selector
-Deterministic RNG
-Tag filtering
-Weighted picks
-Deliverable
-Same seed = same run
+## Phase Summary
+| Phase | Timeline | Status | Goal |
+|-------|----------|--------|------|
+| **0: Foundation** | Jan 12-31 | ✅ 100% | Systems working |
+| **1: Spatial Layer** | Feb 1-28 | 🔲 0% | Walking + town |
+| **2: Content Depth** | Mar-May | 🔲 0% | More scenarios, balance |
+| **3: Polish** | Jun-Aug | 🔲 0% | Art, audio, UX |
+| **4: Launch Prep** | Sep-Oct | 🔲 0% | Demo, Steam page, trailer |
+| **5: Release** | Nov | 🔲 0% | Ship + support |
 
-Week 8 — News System + Day Progression
-End-of-day news
-Day unlock logic
-🎯 VERTICAL SLICE READY (Days 1–3)
-You are ahead of schedule here compared to the beginner plan.
+## Phase 1: Spatial Layer (February)
+**Goal:** Walk around town, talk to NPCs on map
 
- PHASE 2 — FULL 7-DAY LOOP (Weeks 9–20)
-Goal: Feature complete by July/August
+| Week | Tasks |
+|------|-------|
+| Feb 1-7 | Player movement, simple town, camera |
+| Feb 8-14 | NPCs on map, interaction triggers |
+| Feb 15-21 | Locations → scenario routing |
+| Feb 22-28 | Day-based NPC availability, polish |
 
-Weeks 9–10 — Poster System (Day 3 deepening)
-Poster choices
-Influence modifiers
-Delayed consequences
+**Exit Criteria:** Days 1-3 playable with walking.
 
-Weeks 11–12 — Fundraiser (Day 4)
-Kapital gain
-Donor flags
-Media suspicion
+## Phase 2: Content Depth (March-May)
+**Goal:** Enough variety for replay value
 
-Weeks 13–14 — Event System (Day 5)
-Modular events
-Interruptions
-Crowd reactions
+| Month | Focus |
+|-------|-------|
+| March | More NPCs, canvassing scenarios |
+| April | Events expansion, debate improvements |
+| May | Balance pass, difficulty tuning |
 
-Weeks 15–17 — Debate System (Day 6)
-Multi-round logic
-Opponent AI
-Media aftermath
- CORE GAME COMPLETE
+**Exit Criteria:** 3+ distinct run archetypes feel different.
 
-Weeks 18–20 — Endgame (Day 7)
-Vote calculation
-Epilogues
-Replay summary
-At this point, the game is fully playable start to finish.
+## Phase 3: Polish (June-August)
+**Goal:** Looks and sounds good
 
- PHASE 3 — CONTENT + POLISH (Weeks 21–36)
-Goal: Depth, not scope
+| Month | Focus |
+|-------|-------|
+| June | Art pass—consistent pixel style |
+| July | Audio—SFX, simple music loop |
+| August | UX—tutorial text, accessibility |
 
-Weeks 21–26
-AI-generated content
-Balance passes
-UI clarity
-More NPCs/events
+**Exit Criteria:** Game is presentable in screenshots/video.
 
-Weeks 27–30
-Demo prep
-Onboarding
-Tutorial text
+## Phase 4: Launch Prep (September-October)
+**Goal:** Ready to sell
 
-Weeks 31–34
-Steam page
-Screenshots
-Trailer
+| Week | Tasks |
+|------|-------|
+| Sep 1-15 | Steam page, screenshots |
+| Sep 16-30 | Demo (Days 1-3), upload |
+| Oct 1-15 | Trailer (30-45 sec) |
+| Oct 16-31 | Streamer outreach, press kit |
 
-Weeks 35–38
-Bug fixing
-Performance
-QA
+**Exit Criteria:** Steam page live, demo available, wishlists growing.
 
- PHASE 4 — LAUNCH BUFFER (Weeks 39–46)
-Goal: Ship calmly
+## Phase 5: Release (November)
+**Goal:** Ship calmly
 
-Weeks 39–42
-Final polish
-Marketing beats
-Streamer outreach
+| Week | Tasks |
+|------|-------|
+| Nov 1-15 | Final QA, bug fixes |
+| Nov 16-30 | **LAUNCH**, hotfixes, community response |
 
-Weeks 43–46 (Nov)
-Release
-Hotfixes
-Post-launch support
- SHIP BY NOV END (WITH BUFFER)
+---
 
- KEY DIFFERENCES FROM BEGINNER PLAN
-Area
-Beginner
-You
-Godot learning
-4 weeks
-2 weeks
-Vertical slice
-Week 12
-Week 8
-Feature complete
-Sept
-July/Aug
-Buffer
-Thin
-Comfortable
+# 📣 MARKETING STRATEGY
 
-Your experience buys you safety.
+## Pre-Launch (3 months before)
+| Channel | Action |
+|---------|--------|
+| **Steam** | Page live, screenshots, GIFs, about section |
+| **Twitter/X** | Weekly dev updates, GIFs, memes |
+| **Reddit** | r/indiegaming, r/roguelikes, r/godot posts |
+| **Discord** | Small community for playtesters |
 
- New Biggest Risk (for senior devs)
-Over-engineering
-Abstracting too early
-Building “perfect” systems
-Rule for you:
-If it works and is ugly, stop.
+## Launch Week
+| Channel | Action |
+|---------|--------|
+| **Streamers** | Send 20-30 keys to small/mid streamers |
+| **Press** | Email indie-friendly outlets (Rock Paper Shotgun, PC Gamer indie section) |
+| **Reddit** | Launch announcement posts |
+| **Steam** | Launch discount (23% off) |
 
+## Post-Launch
+| Timeline | Action |
+|----------|--------|
+| Week 1-2 | Respond to reviews, hotfix bugs |
+| Month 2 | First content update (free) |
+| Month 3+ | Participate in Steam sales |
 
+## Streamer Appeal Features
+- **Short runs** = good pacing for streams
+- **Skill checks** = visible dice rolls, tension
+- **Absurd outcomes** = reaction content
+- **Debate finale** = dramatic climax
+- **Seeds** = viewers can play same run
 
+---
+
+# ⚠️ RISK MITIGATION
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| **Scope creep** | High | High | Strict feature freeze after April |
+| **Over-engineering** | Medium | Medium | "If ugly but works, stop" |
+| **Art quality concerns** | Medium | Medium | Minimal pixel art, consistency > detail |
+| **Low wishlists** | Medium | High | Demo, streamer outreach, Reddit presence |
+| **Political controversy** | Low | High | No real parties, equal mockery |
+| **Burnout** | Medium | High | Weekend-only dev, use buffer time |
+
+---
+
+# ✅ SUCCESS CRITERIA
+
+## Minimum Viable Product (MVP)
+- [ ] Full 7-day loop playable
+- [ ] Walking in town, talking to NPCs
+- [ ] 10+ unique scenarios per day
+- [ ] News system functional
+- [ ] Election results with explanation
+- [ ] Basic pixel art style
+- [ ] Sound effects for key actions
+
+## Launch Requirements
+- [ ] Steam page with good screenshots
+- [ ] Playable demo (Days 1-3)
+- [ ] 30-45 second trailer
+- [ ] Zero game-breaking bugs
+- [ ] Tutorial/onboarding text
+- [ ] Press kit ready
+
+## Year 1 Goals
+- [ ] 1,500+ copies sold
+- [ ] $10,000 net revenue
+- [ ] 70%+ positive reviews
+- [ ] 1 content update released
+- [ ] Active (small) community
+
+---
+
+# 🎬 APPENDIX: ELEVATOR PITCHES
+
+## For Players (Steam description)
+> **You have 7 days to win an election. Truth is optional.**
+>
+> ELECTION CYCLE is a satirical political roguelite where every run drops you into a new district with new voters, a new opponent, and a new crisis. Make promises. Break them. Survive the debate. Win the vote.
+>
+> Your SKILL determines your playstyle: talk your way out (Speechcraft), buy your way in (Kapital), control the narrative (Influence), or stay dangerously consistent (Logic).
+>
+> No ideology is correct. Everyone is corrupt. Including you.
+
+## For Streamers
+> "It's a political roguelite where you're basically playing a corrupt local politician. Every run is 20-30 minutes, you make promises you can't keep, donors want favors, and on Day 6 there's a debate where everything you've done comes back to haunt you. Great for reactions."
+
+## For Press
+> "Election Cycle offers a refreshingly cynical take on political satire. Rather than preaching, it exposes the contradictions inherent in campaigning through systems-driven gameplay. Think Disco Elysium's dialogue depth meets Papers, Please's moral weight, with Always Sunny's sense of humor. Available November 2026 on Steam."
+
+---
+
+**Document Version:** 2.0  
+**Author:** [Your Name]  
+**Target Revenue:** $10,000 USD (Year 1)  
+**Confidence Level:** High 🚀
