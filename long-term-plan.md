@@ -26,14 +26,17 @@ Lock systems so nothing breaks when space is added.
 
 * [ ] Freeze effect schema (one internal format only)
 * [ ] Loader normalization for legacy fields
-* [ ] Decide & enforce:
+* [x] Decide & enforce:
 
-  * Trust = NPC-only **or**
-  * Introduce `district_support`
+  * ~~Trust = NPC-only **or**~~
+  * ~~Introduce `district_support`~~
+  * **DONE:** Both systems implemented (dual-layer trust)
 * [ ] Add promise IDs + contradiction tracking
 * [ ] Add dev event log (promises, scandals, endorsements)
 * [ ] Deterministic seed test (5 runs, same results)
-* [ ] Debug overlay (stats, flags, promises, scandals)
+* [ ] Debug overlay (stats, flags, promises, scandals, hidden params, perks)
+* [x] Hidden parameters system (external election factors)
+* [x] Perk system (Fallout-style character perks)
 
 ✅ **Exit criteria**
 
@@ -148,7 +151,7 @@ Feature complete game (still unpolished).
 
 ### 🔹 Weeks: Feb 16 – Mar 15
 
-**Focus:** Days 4–5
+**Focus:** Days 4–5 + Save System
 
 #### Tasks
 
@@ -156,6 +159,12 @@ Feature complete game (still unpolished).
 * [ ] Donor flags + delayed consequences
 * [ ] Town event system (interruptions)
 * [ ] Event selection via seed + tags
+* [ ] **Save/Load system:**
+  * Save game state to file (JSON)
+  * Load game from save file
+  * Save slot UI (3 slots)
+  * Auto-save at day transitions
+  * Save includes: day, skills, flags, promises, scandals, seed
 
 ---
 
@@ -177,6 +186,7 @@ Feature complete game (still unpolished).
 ✅ **Exit criteria**
 
 > Full 7-day run, start → end, no placeholders in logic
+> Save/load working reliably
 
 ---
 
@@ -186,19 +196,84 @@ Feature complete game (still unpolished).
 
 Depth, replayability, clarity.
 
-#### Tasks (ongoing)
+---
+
+### 🔹 May: Content Expansion + Campaign Mode Foundation
+
+#### Tasks
 
 * [ ] Add more NPC variants
-* [ ] Expand scenario pools
+* [ ] Expand scenario pools (target: 10+ per day type)
 * [ ] Balance SKILL tradeoffs
 * [ ] Improve news system tone
-* [ ] Tutorial text & onboarding
-* [ ] Accessibility (font size, speed)
+* [ ] **Campaign Mode system:**
+  * Campaign vs Quick Play menu selection
+  * Campaign progress tracking (unlocks, completion)
+  * Fixed seed + scripted events for campaign scenarios
+  * Campaign scenario loader (separate from procedural)
+
+#### Campaign Mode Design
+
+* [ ] Design 10 campaign scenarios (see `content/scripts/campaign_scenarios.md`)
+* [ ] Each scenario has:
+  * Unique district with backstory
+  * Pre-defined opponent with personality/history
+  * Specific crisis that ties into narrative
+  * Scripted events that trigger based on choices
+  * Unique ending variations
+* [ ] **Launch target: 5 scenarios playable**
+* [ ] Remaining 5 scenarios: Post-launch free update
+
+---
+
+### 🔹 June: Opening Scene ("The Parody Bait-and-Switch")
+
+#### Tasks
+
+* [ ] **Opening cinematic sequence:**
+  * Fake Pokemon-style professor intro
+  * Dramatic interruption by "Legal"
+  * Format shift to actual game
+  * See: `content/scripts/opening_scene.md`
+* [ ] Opening scene skip option (for replays)
+* [ ] First-time player detection
+
+**Streamer hook:** The bait-and-switch should generate genuine surprise/laughter on first viewing.
+
+---
+
+### 🔹 July: Tutorial System
+
+#### Tasks
+
+* [ ] **In-game tutorial (non-intrusive):**
+  * Day 1: Explain SKILL system during registration
+  * Day 2: First skill check has extended explanation
+  * Tooltip system for UI elements
+  * "How did I win/lose?" post-game breakdown
+* [ ] Tutorial can be disabled in settings
+* [ ] Tutorial state saved (don't repeat)
+
+---
+
+### 🔹 August: Polish & Accessibility
+
+#### Tasks
+
+* [ ] Accessibility (font size, text speed, colorblind modes)
+* [ ] Settings menu expansion
+* [ ] Final balance pass
+* [ ] Bug sweep
 
 🚫 Do NOT:
 
 * Add new mechanics
 * Add new SKILLs
+
+✅ **Exit criteria**
+
+> Opening scene makes playtesters laugh
+> New players understand the game without external help
 
 ---
 
@@ -232,6 +307,51 @@ Ship calmly.
 * [ ] Hotfix pipeline
 * [ ] Streamer outreach
 * [ ] Launch
+
+---
+
+## PHASE 6 — POST-LAUNCH CONTENT (DEC 2026 → Q1 2027)
+
+### Goal
+
+Keep players engaged, complete campaign mode.
+
+---
+
+### 🔹 December 2026: Hotfix + Community Response
+
+#### Tasks
+
+* [ ] Monitor reviews and feedback
+* [ ] Critical bug fixes
+* [ ] Balance adjustments based on player data
+* [ ] Community building (Discord, Reddit)
+
+---
+
+### 🔹 January 2027: Campaign Completion Update (FREE)
+
+#### Tasks
+
+* [ ] **Campaign scenarios 6-10:**
+  * Scenario 6: [TBD]
+  * Scenario 7: [TBD]
+  * Scenario 8: [TBD]
+  * Scenario 9: [TBD]
+  * Scenario 10: [TBD] (Final/hardest)
+* [ ] Campaign completion rewards/achievements
+* [ ] "Campaign Complete" ending screen
+
+---
+
+### 🔹 Q1 2027: Quality of Life + Extras
+
+#### Tasks
+
+* [ ] Additional procedural content based on feedback
+* [ ] Requested accessibility features
+* [ ] Potential: Endless/challenge mode
+* [ ] Evaluate: Paid DLC viability
 
 ---
 

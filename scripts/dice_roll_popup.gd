@@ -27,6 +27,7 @@ signal roll_declined()
 var current_check_data: Dictionary = {}
 var current_result: Dictionary = {}
 var is_rolling := false
+var roll_tween: Tween
 
 
 func _ready() -> void:
@@ -37,8 +38,22 @@ func _ready() -> void:
 	continue_button.pressed.connect(_on_continue_pressed)
 
 
+func _reset_popup_state() -> void:
+	"""Reset all UI states for a fresh popup display."""
+	is_rolling = false
+	roll_button.disabled = false
+	back_button.disabled = false
+	roll_button.visible = true
+	back_button.visible = true
+	result_container.visible = false
+	continue_button.visible = false
+
+
 func show_check(skill_name: String, difficulty: int, description: String, context: Dictionary = {}) -> void:
 	"""Show the dice roll popup for a skill check."""
+	# Reset all button/UI states from previous use
+	_reset_popup_state()
+
 	# Calculate everything without rolling yet
 	var skill_value := SkillSystem.get_skill(skill_name)
 	var modifiers := DiceRollSystem.calculate_modifiers(skill_name, context)
@@ -167,35 +182,73 @@ func _on_roll_pressed() -> void:
 
 
 func _animate_roll() -> void:
-	"""Animate dice rolling."""
+	"""Animate dice rolling with smooth tweened effects."""
 	result_container.visible = true
 	roll_button.visible = false
 	back_button.visible = false
-	
-	# Quick number cycling animation
+
+	# Kill any existing tween
+	if roll_tween and roll_tween.is_valid():
+		roll_tween.kill()
+
 	var has_two_dice: bool = current_check_data.has_advantage or current_check_data.has_disadvantage
-	
-	for i in range(15):
+
+	# Initial bounce in
+	dice_label.scale = Vector2(0.5, 0.5)
+	dice_label.pivot_offset = dice_label.size / 2
+	roll_tween = create_tween()
+	roll_tween.tween_property(dice_label, "scale", Vector2(1.2, 1.2), 0.15).set_ease(Tween.EASE_OUT)
+	roll_tween.tween_property(dice_label, "scale", Vector2(1.0, 1.0), 0.1).set_ease(Tween.EASE_IN_OUT)
+	await roll_tween.finished
+
+	# Fast spinning phase - rapid number changes with shake
+	var spin_duration := 1.2
+	var spin_steps := 20
+	var step_time := spin_duration / spin_steps
+
+	for i in range(spin_steps):
 		if has_two_dice:
 			dice_label.text = "🎲 %d  🎲 %d" % [randi_range(1, 10), randi_range(1, 10)]
 		else:
 			dice_label.text = "🎲 %d" % randi_range(1, 10)
-		await get_tree().create_timer(0.05 + (i * 0.01)).timeout
-	
-	# Slow down at the end
-	for i in range(5):
+
+		# Subtle shake effect during fast roll
+		var shake_amount := lerpf(8.0, 2.0, float(i) / spin_steps)
+		dice_label.position.x = randf_range(-shake_amount, shake_amount)
+
+		await get_tree().create_timer(step_time).timeout
+
+	# Reset position
+	dice_label.position.x = 0
+
+	# Slowdown phase - dramatic deceleration
+	var slowdown_steps := 8
+	var base_delay := 0.08
+
+	for i in range(slowdown_steps):
 		if has_two_dice:
 			dice_label.text = "🎲 %d  🎲 %d" % [randi_range(1, 10), randi_range(1, 10)]
 		else:
 			dice_label.text = "🎲 %d" % randi_range(1, 10)
-		await get_tree().create_timer(0.1 + (i * 0.05)).timeout
+
+		# Pulse effect on each number change
+		roll_tween = create_tween()
+		roll_tween.tween_property(dice_label, "scale", Vector2(1.1, 1.1), 0.05).set_ease(Tween.EASE_OUT)
+		roll_tween.tween_property(dice_label, "scale", Vector2(1.0, 1.0), 0.05).set_ease(Tween.EASE_IN)
+
+		# Exponential slowdown
+		var delay := base_delay * pow(1.4, i)
+		await get_tree().create_timer(delay).timeout
+
+	# Final dramatic pause before reveal
+	await get_tree().create_timer(0.3).timeout
 
 
 func _show_result() -> void:
-	"""Display the roll result."""
+	"""Display the roll result with animated reveal."""
 	var has_two_dice: bool = current_result.roll_values.size() > 1
-	
-	# Show final dice values
+
+	# Final dice reveal with punch effect
 	if has_two_dice:
 		var d1: int = current_result.roll_values[0]
 		var d2: int = current_result.roll_values[1]
@@ -206,6 +259,12 @@ func _show_result() -> void:
 			dice_label.text = "🎲 %d  🎲 [%d]" % [d1, d2]
 	else:
 		dice_label.text = "🎲 %d" % current_result.final_roll
+
+	# Punch-in effect for final number
+	dice_label.pivot_offset = dice_label.size / 2
+	roll_tween = create_tween()
+	roll_tween.tween_property(dice_label, "scale", Vector2(1.4, 1.4), 0.1).set_ease(Tween.EASE_OUT)
+	roll_tween.tween_property(dice_label, "scale", Vector2(1.0, 1.0), 0.15).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_BACK)
 	
 	# Show breakdown
 	var mod_text := ""
@@ -221,7 +280,7 @@ func _show_result() -> void:
 		current_result.difficulty
 	]
 	
-	# Show result
+	# Show result with animation
 	if current_result.is_crit_success:
 		result_label.text = "★ CRITICAL SUCCESS ★"
 		result_label.add_theme_color_override("font_color", Color(1, 0.84, 0))
@@ -234,10 +293,18 @@ func _show_result() -> void:
 	else:
 		result_label.text = "✗ FAILURE"
 		result_label.add_theme_color_override("font_color", Color(0.8, 0.3, 0.3))
-	
+
+	# Animate result label entrance
+	result_label.pivot_offset = result_label.size / 2
+	result_label.scale = Vector2(0.0, 0.0)
+	result_label.modulate.a = 0.0
+	var result_tween := create_tween().set_parallel(true)
+	result_tween.tween_property(result_label, "scale", Vector2(1.0, 1.0), 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	result_tween.tween_property(result_label, "modulate:a", 1.0, 0.2).set_ease(Tween.EASE_OUT)
+
 	# Voice text
 	result_voice_label.text = "[i]\"%s\"[/i]" % current_result.flavor_text
-	
+
 	continue_button.visible = true
 
 

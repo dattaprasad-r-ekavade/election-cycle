@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 
 GameManager="*res://systems/game_manager.gd"
 SkillSystem="*res://systems/skill_system.gd"
+PerkSystem="*res://systems/perk_system.gd"
 DialogueSystem="*res://systems/dialogue_system.gd"
 NewsSystem="*res://systems/news_system.gd"
 ContentLoader="*res://systems/content_loader.gd"

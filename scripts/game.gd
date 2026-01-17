@@ -9,7 +9,7 @@ extends Control
 @onready var day_title: Label = $MainContent/ContentPanel/ContentMargin/ContentContainer/HeaderPanel/HeaderMargin/HeaderVBox/DayTitle
 @onready var day_description: Label = $MainContent/ContentPanel/ContentMargin/ContentContainer/HeaderPanel/HeaderMargin/HeaderVBox/DayDescription
 @onready var activity_text: RichTextLabel = $MainContent/ContentPanel/ContentMargin/ContentContainer/ActivityPanel/ActivityMargin/ActivityContent/ActivityText
-@onready var choices_container: VBoxContainer = $MainContent/ContentPanel/ContentMargin/ContentContainer/ActivityPanel/ActivityMargin/ActivityContent/ChoicesContainer
+@onready var choices_container: VBoxContainer = $MainContent/ContentPanel/ContentMargin/ContentContainer/ActivityPanel/ActivityMargin/ActivityContent/ChoicesScroll/ChoicesContainer
 @onready var status_label: Label = $BottomBar/HBox/StatusLabel
 @onready var next_day_button: Button = $BottomBar/HBox/NextDayButton
 
@@ -44,6 +44,7 @@ var debate_round: int = 1
 var in_dialogue := false
 var current_activity_type: String = ""
 var current_activity_id: String = ""
+var choice_processing := false
 
 
 func _ready() -> void:
@@ -75,6 +76,7 @@ func _on_day_changed(day: int) -> void:
 
 func _setup_day(day: int) -> void:
 	day_label.text = "► " + GameManager.get_day_name().to_upper()
+	choice_processing = false
 
 	if day == 7:
 		_show_results()
@@ -237,8 +239,16 @@ func _clear_choices() -> void:
 
 
 func _on_choice_selected(index: int) -> void:
+	if choice_processing:
+		return
 	if index < 0 or index >= current_choices.size():
 		return
+
+	choice_processing = true
+	# Disable all choice buttons immediately to prevent double-clicks
+	for child in choices_container.get_children():
+		if child is Button:
+			child.disabled = true
 
 	var choice: Dictionary = current_choices[index]
 
@@ -289,7 +299,7 @@ func _on_dice_roll_accepted(result: Dictionary) -> void:
 		# Critical success bonus
 		if result.is_crit_success:
 			result_text += "[color=gold]Bonus from critical![/color]\n"
-			GameManager.add_district_support(5)
+			GameManager.add_district_support(5, "critical_success")
 	else:
 		if choice.has("effects_on_failure"):
 			_apply_choice_effects(choice.effects_on_failure)
@@ -308,11 +318,26 @@ func _on_dice_roll_accepted(result: Dictionary) -> void:
 	next_day_button.disabled = false
 	pending_choice = {}
 	pending_choice_index = -1
+	choice_processing = false
 
 
 func _on_dice_roll_declined() -> void:
 	"""Player backed out of dice roll"""
-	# Just close popup, choices remain visible
+	# Re-enable choice buttons since player can choose again
+	choice_processing = false
+	for child in choices_container.get_children():
+		if child is Button:
+			# Re-enable unless it was originally locked
+			var idx := child.get_index()
+			if idx >= 0 and idx < current_choices.size():
+				var choice: Dictionary = current_choices[idx]
+				var can_select := true
+				if choice.has("requires"):
+					for skill_name in choice.requires:
+						if not SkillSystem.check_skill(skill_name, choice.requires[skill_name]):
+							can_select = false
+							break
+				child.disabled = not can_select
 	pending_choice = {}
 	pending_choice_index = -1
 
@@ -322,17 +347,22 @@ func _apply_choice_directly(choice: Dictionary) -> void:
 	var result_text := "[color=yellow]►[/color] "
 	if choice.has("effects"):
 		_apply_choice_effects(choice.effects)
-	
+
 	_log_activity_event(choice)
 	result_text += "You selected: " + _replace_placeholders(choice.get("text", "..."))
-	
+
 	activity_text.text = result_text
 	_clear_choices()
 	next_day_button.disabled = false
+	choice_processing = false
 
 
 func _apply_choice_effects(effects: Array) -> void:
-	GameManager.apply_effects(effects, {"npc_id": current_npc_id})
+	var context := {
+		"npc_id": current_npc_id,
+		"source": current_activity_type
+	}
+	GameManager.apply_effects(effects, context)
 	_update_skill_display()
 
 
@@ -407,8 +437,12 @@ func _show_results() -> void:
 	_clear_choices()
 
 	next_day_button.text = "► PLAY AGAIN"
-	next_day_button.pressed.disconnect(_on_next_day_pressed)
-	next_day_button.pressed.connect(_on_play_again)
+	if next_day_button.pressed.is_connected(_on_next_day_pressed):
+		next_day_button.pressed.disconnect(_on_next_day_pressed)
+	if next_day_button.pressed.is_connected(_on_continue_from_news):
+		next_day_button.pressed.disconnect(_on_continue_from_news)
+	if not next_day_button.pressed.is_connected(_on_play_again):
+		next_day_button.pressed.connect(_on_play_again)
 
 
 func _on_next_day_pressed() -> void:
@@ -432,13 +466,17 @@ func _show_news() -> void:
 	_clear_choices()
 
 	next_day_button.text = "► CONTINUE"
-	next_day_button.pressed.disconnect(_on_next_day_pressed)
-	next_day_button.pressed.connect(_on_continue_from_news)
+	if next_day_button.pressed.is_connected(_on_next_day_pressed):
+		next_day_button.pressed.disconnect(_on_next_day_pressed)
+	if not next_day_button.pressed.is_connected(_on_continue_from_news):
+		next_day_button.pressed.connect(_on_continue_from_news)
 
 
 func _on_continue_from_news() -> void:
-	next_day_button.pressed.disconnect(_on_continue_from_news)
-	next_day_button.pressed.connect(_on_next_day_pressed)
+	if next_day_button.pressed.is_connected(_on_continue_from_news):
+		next_day_button.pressed.disconnect(_on_continue_from_news)
+	if not next_day_button.pressed.is_connected(_on_next_day_pressed):
+		next_day_button.pressed.connect(_on_next_day_pressed)
 	GameManager.advance_day()
 
 

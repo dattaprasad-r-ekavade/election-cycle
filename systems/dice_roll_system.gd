@@ -122,7 +122,9 @@ func perform_check(skill_name: String, difficulty: int, context: Dictionary = {}
 	var success := total >= difficulty
 	
 	# Check for criticals (based on final_roll, not total)
-	var is_crit_success := final_roll == 10
+	# Lucky Bastard perk expands crit range
+	var crit_threshold := 10 - PerkSystem.get_crit_range_bonus()
+	var is_crit_success := final_roll >= crit_threshold
 	var is_crit_failure := final_roll == 1
 	
 	# Determine flavor text
@@ -219,30 +221,46 @@ func calculate_modifiers(skill_name: String, context: Dictionary) -> Array[Dicti
 	# 7. Day-based tension (later days are harder under pressure)
 	if GameManager.current_day >= 6:
 		modifiers.append({"source": "Election pressure", "amount": -1})
-	
+
+	# 8. Perk bonuses
+	var perk_bonus := PerkSystem.get_skill_bonus(skill_name)
+	if perk_bonus != 0:
+		modifiers.append({"source": "Perk bonus", "amount": perk_bonus})
+
+	# 9. Canvassing perk bonus (if applicable)
+	if context.get("activity_type", "") == "canvassing":
+		var canvass_bonus := PerkSystem.get_canvassing_bonus()
+		if canvass_bonus > 0:
+			modifiers.append({"source": "Grassroots Hero", "amount": canvass_bonus})
+
 	return modifiers
 
 
 func check_advantage(skill_name: String, context: Dictionary) -> bool:
 	"""Check if the player has advantage on this roll."""
 	var npc_id: String = context.get("npc_id", "")
-	
+
 	# High NPC trust grants advantage
 	if npc_id != "" and GameManager.get_npc_trust(npc_id) >= 50:
 		return true
-	
+
 	# Media bias strongly in your favor
 	if GameManager.media_bias >= 0.4:
 		return true
-	
+
 	# Opponent has active scandal (context flag)
 	if GameManager.get_run_flag("opponent_scandal"):
 		return true
-	
+
 	# Very high district support
 	if GameManager.district_support >= 50:
 		return true
-	
+
+	# Debate Champion perk - advantage on first debate check
+	if context.get("is_debate", false) and context.get("is_first_check", false):
+		if PerkSystem.has_debate_first_advantage():
+			return true
+
 	return false
 
 

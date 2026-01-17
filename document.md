@@ -172,6 +172,110 @@ A political reimagining of SPECIAL (Fallout) as **SKILL**:
 
 ---
 
+# 🎭 THE PERK SYSTEM
+
+> *"Everyone has their angle. What's yours?"*
+
+Perks are special abilities selected during character creation that define your playstyle. Inspired by Fallout's perk system, adapted for political campaigning.
+
+## Overview
+
+| Aspect | Details |
+|--------|---------|
+| **Starting slots** | 2 perks at character creation |
+| **Maximum slots** | 4 (can unlock more through gameplay) |
+| **Categories** | 6 (one per skill + wildcards) |
+| **Total perks** | 24 unique perks |
+
+## Perk Types
+
+| Type | Description | Example |
+|------|-------------|---------|
+| **Passive** | Always active, no activation needed | Silver Tongue: +2 to all Speechcraft checks |
+| **Triggered** | Activates automatically when conditions met | Spotless Record: First scandal is buried |
+| **Activated** | Player chooses when to use (limited uses) | Money Talks: Auto-succeed once per run |
+| **Tradeoff** | Provides benefit with a drawback | Family Name: +3 Legitimacy, scandals hurt 50% more |
+
+## Perk Categories
+
+### Speechcraft Perks
+| Perk | Requirement | Effect |
+|------|-------------|--------|
+| **Silver Tongue** | SPE 4+ | +2 to all Speechcraft checks |
+| **Crowd Pleaser** | SPE 5+ | Town events give +50% district support |
+| **Debate Champion** | SPE 6+ | Advantage on first debate check |
+| **Honeyed Words** | SPE 5+ | Once per day, re-roll failed Speechcraft check |
+
+### Kapital Perks
+| Perk | Requirement | Effect |
+|------|-------------|--------|
+| **Deep Pockets** | None | Start with +3 Kapital |
+| **Donor Network** | KAP 4+ | Fundraiser events give double rewards |
+| **Money Talks** | KAP 6+ | Once per run, auto-succeed any check (costs 2 KAP) |
+| **Corporate Backing** | KAP 5+ | Start with corporate endorsement, -1 LEG, +3 INF |
+
+### Influence Perks
+| Perk | Requirement | Effect |
+|------|-------------|--------|
+| **Media Darling** | INF 4+ | +15% positive news coverage |
+| **Social Media Savvy** | INF 5+ | -25% scandal impact on district support |
+| **Grassroots Hero** | INF 4+ | +3 trust per positive canvassing interaction |
+| **Viral Moment** | INF 6+ | Once per run, force a success to become critical |
+
+### Legitimacy Perks
+| Perk | Requirement | Effect |
+|------|-------------|--------|
+| **Establishment Insider** | LEG 4+ | +2 to all Legitimacy checks |
+| **Spotless Record** | LEG 5+ | First scandal of the run is buried |
+| **Trusted Face** | LEG 4+ | NPCs start with +10 trust toward you |
+| **Veteran Campaigner** | LEG 5+ | Start Day 2 with +15 district support |
+
+### Logic Perks
+| Perk | Requirement | Effect |
+|------|-------------|--------|
+| **Ideological Purity** | LOG 4+ | Keeping promises gives +2 to all checks |
+| **Fact Checker** | LOG 5+ | Once per debate, expose opponent for +5 support |
+| **Mental Fortress** | LOG 6+ | Immune to Logic-based attacks in debate |
+| **Calculated Risk** | LOG 5+ | See hidden probability modifiers on checks |
+
+### Wildcard Perks (No Requirements)
+| Perk | Effect | Tradeoff |
+|------|--------|----------|
+| **Political Outsider** | +3 Speechcraft with angry voters | -2 Legitimacy |
+| **Local Celebrity** | +20% name recognition | -1 Legitimacy |
+| **Dark Horse** | Opponent 10% less effective | None |
+| **Family Name** | +3 Legitimacy | Scandals hurt 50% more |
+| **Lucky Bastard** | Critical success on 9 or 10 | None |
+| **Thick Skin** | Opponent attacks 30% less effective | None |
+| **Wildcard** | Flip failed check to 50/50 crit success OR failure | Risky! |
+
+## Exclusive Perks
+
+Some perks cannot be taken together:
+- **Establishment Insider** ↔ **Political Outsider** (can't be both)
+- **Spotless Record** ↔ **Family Name** (dynasty = baggage)
+- **Deep Pockets** ↔ **Grassroots Hero** (different campaign styles)
+
+## Design Philosophy
+
+1. **No perk is mandatory** — every build is viable without specific perks
+2. **Perks enhance playstyle** — they amplify what you're already good at
+3. **Tradeoffs create stories** — "I took Family Name and got destroyed by scandals"
+4. **Activated perks are clutch moments** — saving Money Talks for the debate feels earned
+5. **Wildcards reward risk-takers** — the Wildcard perk is pure gambling
+
+## Perk Interactions with Other Systems
+
+| System | Perk Interaction |
+|--------|------------------|
+| **Dice Rolls** | Skill bonuses, crit range expansion, advantage triggers |
+| **Events** | Reward multipliers, scandal reduction |
+| **Debate** | First-check advantage, attack immunity, expose ability |
+| **NPCs** | Starting trust bonuses |
+| **Election** | Opponent debuffs, starting support |
+
+---
+
 # 🎲 DICE ROLL SYSTEM (The Gamble)
 
 > *"Politics is gambling with other people's futures."*
@@ -514,6 +618,110 @@ News runs every night between days. It's the **feedback mechanism** that makes c
 | **Rumor (true/false)** | "Is Candidate Hiding Third Marriage?" |
 
 **Important:** News is NOT objective. It's another system to manipulate.
+
+---
+
+# 🎭 HIDDEN PARAMETERS (The Invisible Hand)
+
+> *"You did everything right. The weather disagreed."*
+
+Hidden parameters are external factors that affect the election but are **never shown to the player** (except in debug mode). They create variance, replayability, and realistic unpredictability.
+
+## Design Philosophy
+
+1. **Simulate real elections** — Real campaigns are affected by factors outside anyone's control
+2. **Create replayability** — Same strategy can have different results
+3. **Prevent "solved" builds** — No strategy is always optimal
+4. **Maintain fairness** — Hidden factors swing ±10-15%, not ±50%
+
+## Hidden Parameter Categories
+
+### Weather & Timing
+| Parameter | Range | Effect |
+|-----------|-------|--------|
+| **Season** | Spring/Summer/Fall/Winter | Affects turnout demographics |
+| **Election Day Weather** | Clear to Stormy | Turnout modifier (-15% to +10%) |
+| **Day of Week** | Mon-Sun | Weekend elections have +5% turnout |
+
+### Economic Climate
+| State | Modifier | Effect |
+|-------|----------|--------|
+| **Recession** | -15 to -8 | Voters want change |
+| **Stagnant** | -8 to -3 | Slight anti-incumbent |
+| **Stable** | -2 to +5 | Status quo okay |
+| **Growing** | +3 to +10 | Incumbents favored |
+| **Booming** | +8 to +15 | "Don't rock the boat" |
+
+### National Political Mood
+| Mood | Effect on Player |
+|------|------------------|
+| **Anti-establishment** | Legitimacy hurts, Speechcraft helps |
+| **Polarized** | Speechcraft is risky (±5) |
+| **Apathetic** | Kapital matters more (money buys attention) |
+| **Engaged** | Legitimacy matters (voters research) |
+| **Angry** | Speechcraft +12, Kapital looks bad |
+| **Hopeful** | Legitimacy +6 |
+
+### District Demographics (Generated per run)
+| Parameter | Range | Affects |
+|-----------|-------|---------|
+| **Base turnout** | 35-75% | How many vote |
+| **Youth population** | 10-35% | Susceptible to Influence |
+| **Elderly population** | 10-35% | Care about Legitimacy |
+| **College educated** | 20-60% | Respond to Logic |
+| **Union membership** | 5-35% | Labor promises matter |
+| **Homeowner rate** | 30-80% | Tax/development sensitivity |
+
+### Local Events
+| Event | Modifier |
+|-------|----------|
+| Sports team won | +2 to +5 (good vibes) |
+| Factory closing | -8 to -3 (anxiety) |
+| Festival week | +3 to +7 (community spirit) |
+| Crime spike | -6 to -2 (fear) |
+| Infrastructure failure | -7 to -3 (anger at institutions) |
+
+### Opponent Hidden Stats
+| Stat | Effect |
+|------|--------|
+| **War chest** | $10k-$100k (their ad spending) |
+| **Name recognition** | 20-80% (how known they are) |
+| **Skeletons** | 0-3 (scandals that might drop) |
+| **Ground game** | 30-90% (volunteer strength) |
+| **Gaffe-prone** | 20% chance (they might mess up) |
+
+### Wild Cards
+| Event | Chance | Effect |
+|-------|--------|--------|
+| **October surprise** | 5-20% | Random ±15 swing on election day |
+| **Endorsement jackpot** | 10% | Major endorsement if you have any |
+| **Anti-incumbent wave** | 25% | +5 to +12 for challengers (you) |
+
+## How Hidden Params Affect Election
+
+```
+Final Vote = Base (45%) + Player Actions + Hidden Modifier ± Randomness
+```
+
+Hidden modifier typically swings the election by **±10 points** total.
+
+## Debug Access
+
+Players never see these. Developers can access via:
+```gdscript
+GameManager.get_hidden_params_debug()
+```
+
+This returns a formatted dictionary of all hidden parameters for the current run.
+
+## Why This Matters
+
+| Benefit | Description |
+|---------|-------------|
+| **Realism** | Elections are unpredictable in real life |
+| **Replayability** | "I did the same thing and lost—what changed?" |
+| **Discussion** | "The economy was in recession, of course I lost" |
+| **Streamer content** | Post-game reveal of hidden params is entertaining |
 
 ---
 
