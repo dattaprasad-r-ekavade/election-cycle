@@ -266,6 +266,8 @@ func get_news_headline(headline_type: String) -> String:
 
 func _append_debate_callouts(base_text: String) -> String:
 	var callouts: Array = []
+
+	# Flag-based callouts (actions the player took)
 	var flag_lines := {
 		"ate_evidence": "They literally ate evidence on camera.",
 		"fled_mcpoyles": "They ran from the McPoyles. On video.",
@@ -278,10 +280,19 @@ func _append_debate_callouts(base_text: String) -> String:
 		if GameManager.get_run_flag(flag_name):
 			callouts.append(flag_lines[flag_name])
 
+	# Contradiction-based callouts (promises that conflict)
+	if GameManager.has_contradictions():
+		var contradictions := GameManager.get_contradictions()
+		for contradiction in contradictions.slice(0, 2):
+			callouts.append("They promised '%s' AND '%s' — which is it?" % [
+				contradiction.get("promise_a", ""),
+				contradiction.get("promise_b", "")
+			])
+
 	if callouts.is_empty():
 		return base_text
 
-	var extra := " " + " ".join(callouts.slice(0, 2))
+	var extra := " " + " ".join(callouts.slice(0, 3))
 	return base_text + extra
 
 

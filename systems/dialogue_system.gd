@@ -338,13 +338,23 @@ func _validate_effect_ops(effects: Array, dialogue_id: String, node_id: String) 
 	if not (effects is Array):
 		push_error("[DialogueSystem] Effects must be an array in %s/%s" % [dialogue_id, node_id])
 		return false
-	var allowed_ops := ["stat_add", "trust_add", "promise_add", "endorsement_add", "set_flag", "clear_flag", "scandal_add"]
+	var allowed_ops := ["stat_add", "trust_add", "district_support_add", "promise_add", "endorsement_add", "set_flag", "clear_flag", "scandal_add", "scandal_risk_add"]
 	for effect in effects:
 		var op: String = effect.get("op", "")
 		if not allowed_ops.has(op):
 			push_error("[DialogueSystem] Unknown effect op %s in %s/%s" % [op, dialogue_id, node_id])
 			return false
-		if op == "stat_add" and not SkillSystem.SKILL_NAMES.has(effect.get("stat", "")):
-			push_error("[DialogueSystem] Invalid stat_add in %s/%s" % [dialogue_id, node_id])
-			return false
+		match op:
+			"stat_add":
+				if not SkillSystem.SKILL_NAMES.has(effect.get("stat", "")):
+					push_error("[DialogueSystem] Invalid stat_add stat in %s/%s" % [dialogue_id, node_id])
+					return false
+			"promise_add":
+				if effect.get("id", "") == "" or effect.get("text", "") == "":
+					push_error("[DialogueSystem] promise_add missing id/text in %s/%s" % [dialogue_id, node_id])
+					return false
+			"scandal_risk_add":
+				if not (effect.get("chance", 0.0) is float or effect.get("chance", 0.0) is int):
+					push_error("[DialogueSystem] scandal_risk_add chance invalid in %s/%s" % [dialogue_id, node_id])
+					return false
 	return true

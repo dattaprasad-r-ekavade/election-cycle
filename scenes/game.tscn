@@ -144,19 +144,20 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 
 [node name="ActivityText" type="RichTextLabel" parent="MainContent/ContentPanel/ContentMargin/ContentContainer/ActivityPanel/ActivityMargin/ActivityContent"]
-custom_minimum_size = Vector2(0, 120)
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 1.0
 theme_override_colors/default_color = Color(0.15, 0.15, 0.15, 1)
 bbcode_enabled = true
 text = "Activity content will appear here..."
 scroll_active = true
 
 [node name="ChoicesScroll" type="ScrollContainer" parent="MainContent/ContentPanel/ContentMargin/ContentContainer/ActivityPanel/ActivityMargin/ActivityContent"]
-custom_minimum_size = Vector2(0, 50)
-custom_maximum_size = Vector2(0, 250)
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
-size_flags_vertical = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.0
 horizontal_scroll_mode = 0
 
 [node name="ChoicesContainer" type="VBoxContainer" parent="MainContent/ContentPanel/ContentMargin/ContentContainer/ActivityPanel/ActivityMargin/ActivityContent/ChoicesScroll"]

@@ -81,8 +81,8 @@ func _generate_registration_news() -> Dictionary:
 
 func _generate_canvassing_news() -> Dictionary:
 	var trust_avg := 0
-	for trust in GameManager.npc_trust.values():
-		trust_avg += trust
+	for npc_data in GameManager.npc_trust.values():
+		trust_avg += npc_data.trust
 	trust_avg = trust_avg / max(GameManager.npc_trust.size(), 1)
 
 	var tone := "neutral"

@@ -473,7 +473,7 @@ func get_active_perks_data() -> Array[Dictionary]:
 	"""Get full data for all active perks"""
 	var result: Array[Dictionary] = []
 	for perk_id in active_perks:
-		var data := PERKS.get(perk_id, {}).duplicate()
+		var data: Dictionary = PERKS.get(perk_id, {}).duplicate()
 		data["id"] = perk_id
 		result.append(data)
 	return result

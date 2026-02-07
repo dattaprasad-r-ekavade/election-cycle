@@ -34,11 +34,25 @@ var campaign_slogan: String = ""
 # Tracking systems
 var promises_made: Array[Dictionary] = []
 var promises_broken: Array[Dictionary] = []
+var promise_contradictions: Array[Dictionary] = []  # Detected contradictions
 var scandals: Array[Dictionary] = []
 var scandal_risks: Array[Dictionary] = []
 var endorsements: Array[String] = []
 var run_flags: Dictionary = {}
 var event_log: Array[Dictionary] = []
+
+# Promise contradiction pairs: if both IDs exist, they contradict
+# Each entry: [promise_id_pattern_a, promise_id_pattern_b, description]
+const CONTRADICTION_PAIRS := [
+	["build", "cut_spending", "Promised to build things AND cut spending"],
+	["lower_taxes", "increase_funding", "Promised lower taxes AND more funding"],
+	["tough_on_crime", "defund", "Promised tough on crime AND defunding"],
+	["preserve", "develop", "Promised preservation AND development"],
+	["transparency", "backroom", "Promised transparency AND made backroom deals"],
+	["clean_campaign", "attack", "Promised clean campaign AND attacked opponent"],
+	["protect_environment", "deregulate", "Promised environmental protection AND deregulation"],
+	["support_workers",  "corporate", "Promised worker support AND corporate backing"],
+]
 
 # Trust Systems (dual-layer)
 # NPC Trust: Individual relationships with key characters
@@ -76,6 +90,7 @@ func start_new_game(seed_value: int = 0) -> void:
 	current_day = 1
 	promises_made.clear()
 	promises_broken.clear()
+	promise_contradictions.clear()
 	scandals.clear()
 	scandal_risks.clear()
 	endorsements.clear()
@@ -335,6 +350,57 @@ func add_promise(promise: Dictionary) -> void:
 	print("[GameManager] Promise made: %s" % promise.get("text", "Unknown"))
 	log_event("promise_made", promise)
 
+	# Check for contradictions with existing promises
+	_check_promise_contradictions(promise)
+
+
+func _check_promise_contradictions(new_promise: Dictionary) -> void:
+	"""Check if a new promise contradicts any existing promises"""
+	var new_id: String = new_promise.get("id", "").to_lower()
+	if new_id == "":
+		return
+
+	for existing in promises_made:
+		if existing == new_promise:
+			continue
+		var existing_id: String = existing.get("id", "").to_lower()
+		if existing_id == "":
+			continue
+
+		for pair in CONTRADICTION_PAIRS:
+			var pattern_a: String = pair[0]
+			var pattern_b: String = pair[1]
+			var description: String = pair[2]
+
+			var match_found := false
+			if new_id.contains(pattern_a) and existing_id.contains(pattern_b):
+				match_found = true
+			elif new_id.contains(pattern_b) and existing_id.contains(pattern_a):
+				match_found = true
+
+			if match_found:
+				var contradiction := {
+					"promise_a": existing.get("text", existing_id),
+					"promise_b": new_promise.get("text", new_id),
+					"promise_a_id": existing_id,
+					"promise_b_id": new_id,
+					"description": description,
+					"day_detected": current_day
+				}
+				promise_contradictions.append(contradiction)
+				log_event("contradiction_detected", contradiction)
+				print("[GameManager] CONTRADICTION: %s" % description)
+
+
+func get_contradictions() -> Array[Dictionary]:
+	"""Get all detected promise contradictions (used by debate and endgame)"""
+	return promise_contradictions
+
+
+func has_contradictions() -> bool:
+	"""Check if player has any contradictions"""
+	return not promise_contradictions.is_empty()
+
 
 func break_promise(promise_index: int) -> void:
 	"""Mark a promise as broken"""
@@ -557,7 +623,13 @@ func calculate_election_results() -> Dictionary:
 
 	# Logic consistency bonus (staying consistent matters)
 	var logic_bonus := SkillSystem.get_skill("logic") * 2.0
+
+	# Contradictions penalize logic bonus
+	var contradiction_penalty := promise_contradictions.size() * -8
+	logic_bonus += contradiction_penalty
 	results.factors["logic"] = logic_bonus
+	if contradiction_penalty < 0:
+		results.factors["contradictions"] = contradiction_penalty
 
 	# Combined trust score (NPC + District weighted)
 	var combined_trust := get_total_support()

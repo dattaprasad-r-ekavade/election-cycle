@@ -221,7 +221,8 @@ func _show_choices(choices: Array) -> void:
 
 		btn.disabled = not can_select
 		btn.pressed.connect(_on_choice_selected.bind(i))
-		btn.custom_minimum_size = Vector2(0, 38)
+		btn.custom_minimum_size = Vector2(0, 44)
+		btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		choices_container.add_child(btn)
 
 
