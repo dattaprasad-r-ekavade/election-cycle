@@ -1,0 +1,95 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/opening_scene.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/online/professor_elmwood_online.svg" id="2_prof"]
+[ext_resource type="Texture2D" path="res://assets/sprites/online/legal_counsel_online.svg" id="3_legal"]
+[ext_resource type="Texture2D" path="res://assets/sprites/online/political_creature_online.svg" id="4_creature"]
+
+[node name="OpeningScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.17, 0.26, 0.35, 1)
+
+[node name="CenterArea" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ProfessorSprite" type="TextureRect" parent="CenterArea"]
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 2
+texture = ExtResource("2_prof")
+stretch_mode = 6
+
+[node name="LegalSprite" type="TextureRect" parent="CenterArea"]
+visible = false
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 2
+texture = ExtResource("3_legal")
+stretch_mode = 6
+
+[node name="CreatureSprite" type="TextureRect" parent="CenterArea"]
+layout_mode = 0
+offset_left = 428.0
+offset_top = 280.0
+offset_right = 540.0
+offset_bottom = 392.0
+texture = ExtResource("4_creature")
+stretch_mode = 6
+
+[node name="DialoguePanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -230.0
+offset_right = -30.0
+offset_bottom = -20.0
+grow_horizontal = 2
+
+[node name="Margin" type="MarginContainer" parent="DialoguePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="DialoguePanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Speaker" type="Label" parent="DialoguePanel/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Speaker"
+
+[node name="Line" type="RichTextLabel" parent="DialoguePanel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+text = "Line"
+
+[node name="Hint" type="Label" parent="DialoguePanel/Margin/VBox"]
+layout_mode = 2
+horizontal_alignment = 2
+text = "Press Enter to continue."

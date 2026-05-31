@@ -66,33 +66,33 @@
 
 ## PHASE 1: Spatial Layer (February)
 
-_Not started. Blocked on Phase 0 completion._
+_Completed. Spatial walkable loop is now integrated for Day 2-3._
 
-- [ ] Town map (tilemap or static background)
-- [ ] Player character sprite + movement
-- [ ] Camera follow
-- [ ] NPC nodes as interaction anchors
-- [ ] Location → scenario routing
-- [ ] Days 1-3 playable with walking
+- [x] Town map (tilemap or static background)
+- [x] Player character sprite + movement
+- [x] Camera follow
+- [x] NPC nodes as interaction anchors
+- [x] Location → scenario routing
+- [x] Days 1-3 playable with walking
 
 ---
 
 ## PHASE 2: Full Loop + Save System (Mar-Apr)
 
-- [ ] Save/load system (JSON state, 3 slots, auto-save)
-- [ ] Debate scene improvements
-- [ ] Vote calculation polish
-- [ ] Endgame explanation screen
+- [x] Save/load system (JSON state, 3 slots, auto-save)
+- [x] Debate scene improvements
+- [x] Vote calculation polish
+- [x] Endgame explanation screen
 
 ---
 
 ## PHASE 3: Content + Balance (May-Aug)
 
-- [ ] Campaign Mode (10 hand-crafted scenarios)
-- [ ] Opening scene (Pokemon parody bait-and-switch)
-- [ ] Tutorial system
-- [ ] Content expansion (10+ scenarios per day type)
-- [ ] Accessibility features
+- [x] Campaign Mode (10 hand-crafted scenarios)
+- [x] Opening scene (Pokemon-style parody bait-and-switch)
+- [x] Tutorial system
+- [x] Content expansion (10+ scenarios per day type)
+- [x] Accessibility features
 
 ---
 

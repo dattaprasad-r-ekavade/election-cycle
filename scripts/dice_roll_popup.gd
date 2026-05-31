@@ -31,6 +31,7 @@ var roll_tween: Tween
 
 
 func _ready() -> void:
+	SettingsSystem.apply_font_scale(self)
 	visible = false
 	result_container.visible = false
 	roll_button.pressed.connect(_on_roll_pressed)
@@ -84,6 +85,10 @@ func show_check(skill_name: String, difficulty: int, description: String, contex
 		"context": context,
 		"pre_voice": DiceRollSystem.SKILL_VOICES.get(skill_name, {}).get("pre", "Make your move.")
 	}
+
+	if TutorialSystem.should_show_tip("first_skill_check"):
+		current_check_data.description += "\n\n[color=yellow]Tutorial:[/color] Total = skill + dice + modifiers. Meet or beat the difficulty to succeed."
+		TutorialSystem.mark_tip_seen("first_skill_check")
 	
 	_populate_ui()
 	result_container.visible = false
@@ -95,7 +100,7 @@ func show_check(skill_name: String, difficulty: int, description: String, contex
 func _populate_ui() -> void:
 	"""Populate the UI with check data."""
 	# Title
-	title_label.text = "⚔️ %s CHECK ⚔️" % current_check_data.skill_display.to_upper()
+	title_label.text = "%s CHECK" % current_check_data.skill_display.to_upper()
 	
 	# Description
 	description_label.text = current_check_data.description
@@ -115,14 +120,14 @@ func _populate_ui() -> void:
 	var mods: Array = current_check_data.modifiers
 	if mods.is_empty():
 		var no_mods := Label.new()
-		no_mods.text = "► No modifiers"
+		no_mods.text = "No modifiers"
 		no_mods.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
 		modifiers_container.add_child(no_mods)
 	else:
 		for mod in mods:
 			var mod_label := Label.new()
 			var color := Color(0.3, 0.8, 0.3) if mod.amount > 0 else Color(0.8, 0.3, 0.3)
-			mod_label.text = "► %s: %+d" % [mod.source, mod.amount]
+			mod_label.text = "%s: %+d" % [mod.source, mod.amount]
 			mod_label.add_theme_color_override("font_color", color)
 			modifiers_container.add_child(mod_label)
 	
@@ -143,11 +148,11 @@ func _populate_ui() -> void:
 	
 	# Advantage/Disadvantage
 	if current_check_data.has_advantage:
-		advantage_label.text = "✦ ADVANTAGE (Roll 2d10, take higher)"
+		advantage_label.text = "ADVANTAGE (Roll 2d10, take higher)"
 		advantage_label.add_theme_color_override("font_color", Color(0.3, 0.8, 0.3))
 		advantage_label.visible = true
 	elif current_check_data.has_disadvantage:
-		advantage_label.text = "✧ DISADVANTAGE (Roll 2d10, take lower)"
+		advantage_label.text = "DISADVANTAGE (Roll 2d10, take lower)"
 		advantage_label.add_theme_color_override("font_color", Color(0.8, 0.3, 0.3))
 		advantage_label.visible = true
 	else:
@@ -208,9 +213,9 @@ func _animate_roll() -> void:
 
 	for i in range(spin_steps):
 		if has_two_dice:
-			dice_label.text = "🎲 %d  🎲 %d" % [randi_range(1, 10), randi_range(1, 10)]
+			dice_label.text = "DIE %d  DIE %d" % [randi_range(1, 10), randi_range(1, 10)]
 		else:
-			dice_label.text = "🎲 %d" % randi_range(1, 10)
+			dice_label.text = "DIE %d" % randi_range(1, 10)
 
 		# Subtle shake effect during fast roll
 		var shake_amount := lerpf(8.0, 2.0, float(i) / spin_steps)
@@ -227,9 +232,9 @@ func _animate_roll() -> void:
 
 	for i in range(slowdown_steps):
 		if has_two_dice:
-			dice_label.text = "🎲 %d  🎲 %d" % [randi_range(1, 10), randi_range(1, 10)]
+			dice_label.text = "DIE %d  DIE %d" % [randi_range(1, 10), randi_range(1, 10)]
 		else:
-			dice_label.text = "🎲 %d" % randi_range(1, 10)
+			dice_label.text = "DIE %d" % randi_range(1, 10)
 
 		# Pulse effect on each number change
 		roll_tween = create_tween()
@@ -254,11 +259,11 @@ func _show_result() -> void:
 		var d2: int = current_result.roll_values[1]
 		var used: int = current_result.final_roll
 		if d1 == used:
-			dice_label.text = "🎲 [%d]  🎲 %d" % [d1, d2]
+			dice_label.text = "DIE [%d]  DIE %d" % [d1, d2]
 		else:
-			dice_label.text = "🎲 %d  🎲 [%d]" % [d1, d2]
+			dice_label.text = "DIE %d  DIE [%d]" % [d1, d2]
 	else:
-		dice_label.text = "🎲 %d" % current_result.final_roll
+		dice_label.text = "DIE %d" % current_result.final_roll
 
 	# Punch-in effect for final number
 	dice_label.pivot_offset = dice_label.size / 2

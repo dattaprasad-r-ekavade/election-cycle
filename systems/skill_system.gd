@@ -197,3 +197,22 @@ func set_starting_allocation(extra_points: int) -> void:
 func get_points_remaining() -> int:
 	"""Get remaining allocation points"""
 	return allocation_points
+
+
+func export_state() -> Dictionary:
+	"""Serialize skills/modifiers/allocation for saves."""
+	return {
+		"skills": skills,
+		"modifiers": modifiers,
+		"allocation_points": allocation_points,
+	}
+
+
+func import_state(data: Dictionary) -> void:
+	"""Hydrate skill state from save payload."""
+	skills = data.get("skills", skills)
+	modifiers = data.get("modifiers", modifiers)
+	allocation_points = int(data.get("allocation_points", allocation_points))
+	for skill_name in SKILL_NAMES:
+		skill_changed.emit(skill_name, get_skill(skill_name))
+	points_changed.emit(allocation_points)

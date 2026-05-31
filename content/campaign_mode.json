@@ -1,0 +1,124 @@
+{
+  "scenarios": [
+    {
+      "index": 1,
+      "id": "first_timer",
+      "title": "First Timer",
+      "seed": 1101,
+      "district_name": "Millbrook Ward",
+      "district_theme": "Suburban",
+      "main_crisis": "The Grocery Store Closure",
+      "opponent_name": "Margaret Holloway",
+      "opponent_archetype": "The Incumbent",
+      "scripted_flags": ["campaign_first_timer"]
+    },
+    {
+      "index": 2,
+      "id": "family_business",
+      "title": "The Family Business",
+      "seed": 2202,
+      "district_name": "Carver Falls District",
+      "district_theme": "Industrial",
+      "main_crisis": "The Mill Sale",
+      "opponent_name": "Raymond Cross",
+      "opponent_archetype": "The Outsider",
+      "scripted_flags": ["campaign_family_name"]
+    },
+    {
+      "index": 3,
+      "id": "the_transplant",
+      "title": "The Transplant",
+      "seed": 3303,
+      "district_name": "Havenport Commons",
+      "district_theme": "Coastal",
+      "main_crisis": "Fish Plant Layoffs",
+      "opponent_name": "Bobby Hutchins",
+      "opponent_archetype": "The Local Favorite",
+      "scripted_flags": ["campaign_outsider"]
+    },
+    {
+      "index": 4,
+      "id": "the_scandal",
+      "title": "The Scandal",
+      "seed": 4404,
+      "district_name": "Greendale Borough",
+      "district_theme": "Downtown",
+      "main_crisis": "School Board Corruption",
+      "opponent_name": "Patricia Manning",
+      "opponent_archetype": "The Moralist",
+      "scripted_flags": ["campaign_scandal"]
+    },
+    {
+      "index": 5,
+      "id": "the_rematch",
+      "title": "The Rematch",
+      "seed": 5505,
+      "district_name": "Westfield Heights",
+      "district_theme": "Suburban",
+      "main_crisis": "Housing Cost Explosion",
+      "opponent_name": "Derek Walsh",
+      "opponent_archetype": "The Career Politician",
+      "scripted_flags": ["campaign_rematch"]
+    },
+    {
+      "index": 6,
+      "id": "the_machine",
+      "title": "The Machine",
+      "seed": 6606,
+      "district_name": "Ironline District",
+      "district_theme": "Industrial",
+      "main_crisis": "Patronage Probe",
+      "opponent_name": "Victor Halden",
+      "opponent_archetype": "The Fixer",
+      "scripted_flags": ["campaign_machine"]
+    },
+    {
+      "index": 7,
+      "id": "the_strike",
+      "title": "The Strike",
+      "seed": 7707,
+      "district_name": "Port Union Ward",
+      "district_theme": "Industrial",
+      "main_crisis": "Dockworker Strike",
+      "opponent_name": "Nadia Trent",
+      "opponent_archetype": "The Reformer",
+      "scripted_flags": ["campaign_strike"]
+    },
+    {
+      "index": 8,
+      "id": "the_blackout",
+      "title": "The Blackout",
+      "seed": 8808,
+      "district_name": "North Grid Borough",
+      "district_theme": "Downtown",
+      "main_crisis": "Citywide Blackout",
+      "opponent_name": "Graham Pike",
+      "opponent_archetype": "The Administrator",
+      "scripted_flags": ["campaign_blackout"]
+    },
+    {
+      "index": 9,
+      "id": "the_flood",
+      "title": "The Flood",
+      "seed": 9909,
+      "district_name": "Lowbank Commons",
+      "district_theme": "Coastal",
+      "main_crisis": "Disaster Response",
+      "opponent_name": "Helena Park",
+      "opponent_archetype": "The Crisis Manager",
+      "scripted_flags": ["campaign_flood"]
+    },
+    {
+      "index": 10,
+      "id": "the_final_campaign",
+      "title": "The Final Campaign",
+      "seed": 10101,
+      "district_name": "Mirror Ward",
+      "district_theme": "University",
+      "main_crisis": "Identity Crisis",
+      "opponent_name": "You, But Different",
+      "opponent_archetype": "The Reflection",
+      "scripted_flags": ["campaign_finale"]
+    }
+  ]
+}

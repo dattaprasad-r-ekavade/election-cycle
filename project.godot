@@ -13,7 +13,7 @@ config_version=5
 config/name="Election Cycle"
 config/description="A satirical political RPG where you have 7 in-game days to win an election."
 run/main_scene="res://scenes/main_menu.tscn"
-config/features=PackedStringArray("4.4", "Forward Plus")
+config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -26,12 +26,21 @@ NewsSystem="*res://systems/news_system.gd"
 ContentLoader="*res://systems/content_loader.gd"
 DiceRollSystem="*res://systems/dice_roll_system.gd"
 DebugOverlay="*res://systems/debug_overlay.gd"
+SettingsSystem="*res://systems/settings_system.gd"
+TutorialSystem="*res://systems/tutorial_system.gd"
+CampaignSystem="*res://systems/campaign_system.gd"
+SaveSystem="*res://systems/save_system.gd"
 
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/mode="canvas_items"
+window/handheld/orientation=2
+
+[rendering]
+
+textures/vram_compression/import_etc2_astc=true
 
 [input]
 

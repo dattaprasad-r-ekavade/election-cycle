@@ -45,9 +45,11 @@ var in_dialogue := false
 var current_activity_type: String = ""
 var current_activity_id: String = ""
 var choice_processing := false
+var debate_aftermath_shown := false
 
 
 func _ready() -> void:
+	SettingsSystem.apply_font_scale(self)
 	GameManager.day_changed.connect(_on_day_changed)
 	GameManager.game_ended.connect(_on_game_ended)
 	SkillSystem.skill_changed.connect(_on_skill_changed)
@@ -77,6 +79,8 @@ func _on_day_changed(day: int) -> void:
 func _setup_day(day: int) -> void:
 	day_label.text = "► " + GameManager.get_day_name().to_upper()
 	choice_processing = false
+	if day != 6:
+		debate_aftermath_shown = false
 
 	if day == 7:
 		_show_results()
@@ -420,6 +424,24 @@ func _show_results() -> void:
 		var color := "green" if value > 0 else ("red" if value < 0 else "white")
 		text += "► %s: [color=%s]%+.1f[/color]\n" % [factor.capitalize().replace("_", " "), color, value]
 
+	var factor_rows: Array = []
+	for factor_name in results.factors.keys():
+		factor_rows.append({
+			"name": String(factor_name),
+			"value": float(results.factors[factor_name]),
+			"impact": absf(float(results.factors[factor_name]))
+		})
+	factor_rows.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return a.impact > b.impact
+	)
+
+	text += "\n[b]═══ WHY YOU WON/LOST ═══[/b]\n"
+	for i in range(mini(3, factor_rows.size())):
+		var item: Dictionary = factor_rows[i]
+		var label := item.name.capitalize().replace("_", " ")
+		var direction := "helped" if float(item.value) >= 0.0 else "hurt"
+		text += "► %s %s you (%+.1f)\n" % [label, direction, float(item.value)]
+
 	if GameManager.scandals.size() > 0:
 		text += "\n[b]═══ SCANDALS ═══[/b]\n"
 		for scandal in GameManager.scandals:
@@ -447,7 +469,36 @@ func _show_results() -> void:
 
 
 func _on_next_day_pressed() -> void:
+	if GameManager.current_day == 6 and not debate_aftermath_shown:
+		_show_media_aftermath()
+		return
 	_show_news()
+
+
+func _show_media_aftermath() -> void:
+	debate_aftermath_shown = true
+	var debate_events := 0
+	var scandals_today := 0
+
+	for event in GameManager.event_log:
+		if int(event.day) == 6 and event.type == "debate_choice":
+			debate_events += 1
+		if int(event.day) == 6 and event.type == "scandal_triggered":
+			scandals_today += 1
+
+	var text := "[b]═══ POST-DEBATE MEDIA AFTERMATH ═══[/b]\n\n"
+	text += "Debate clips are everywhere. Pundits are grading every sentence.\n\n"
+	if scandals_today > 0:
+		text += "[color=red]The narrative is hostile.[/color] Your gaffes are leading every segment.\n"
+	elif debate_events >= 1:
+		text += "[color=green]You held the stage.[/color] Commentators say you looked prepared.\n"
+	else:
+		text += "[color=yellow]Coverage is mixed.[/color] Nobody agrees on who won.\n"
+
+	text += "\nElection day is next."
+	activity_text.text = text
+	_clear_choices()
+	next_day_button.text = "► CONTINUE TO NEWS"
 
 
 func _show_news() -> void:

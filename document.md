@@ -800,16 +800,16 @@ All content is **JSON-based** for:
 
 # 📈 DEVELOPMENT TIMELINE (Revised)
 
-**Current Status:** January 17, 2026 — **68% complete**  
-**Current State:** Full 7-day loop playable (text-based, no spatial layer)
+**Current Status:** May 30, 2026 — **92% complete**  
+**Current State:** Full 7-day loop + save slots + campaign mode + opening cutscene + tutorial/accessibility playable
 
 ## Phase Summary
 | Phase | Timeline | Status | Goal |
 |-------|----------|--------|------|
 | **0: Foundation** | Jan 12-31 | ✅ 100% | Systems working |
-| **1: Spatial Layer** | Feb 1-28 | 🔲 0% | Walking + town |
-| **2: Content Depth** | Mar-May | 🔲 0% | More scenarios, balance |
-| **3: Polish** | Jun-Aug | 🔲 0% | Art, audio, UX |
+| **1: Spatial Layer** | Feb 1-28 | ✅ 100% | Walking + town |
+| **2: Content Depth** | Mar-May | ✅ 100% | Full loop + save system |
+| **3: Polish** | Jun-Aug | ✅ 100% | Campaign mode + onboarding/accessibility |
 | **4: Launch Prep** | Sep-Oct | 🔲 0% | Demo, Steam page, trailer |
 | **5: Release** | Nov | 🔲 0% | Ship + support |
 
@@ -818,32 +818,34 @@ All content is **JSON-based** for:
 
 | Week | Tasks |
 |------|-------|
-| Feb 1-7 | Player movement, simple town, camera |
-| Feb 8-14 | NPCs on map, interaction triggers |
-| Feb 15-21 | Locations → scenario routing |
-| Feb 22-28 | Day-based NPC availability, polish |
+| Feb 1-7 | ✅ Player movement, simple town, camera |
+| Feb 8-14 | ✅ NPC anchors on map, interaction triggers |
+| Feb 15-21 | ✅ Locations → scenario routing |
+| Feb 22-28 | ✅ Day 2-3 walkable loop + handoff to core campaign scene |
 
-**Exit Criteria:** Days 1-3 playable with walking.
+**Exit Criteria:** ✅ Days 1-3 playable with walking.
 
 ## Phase 2: Content Depth (March-May)
 **Goal:** Enough variety for replay value
 
 | Month | Focus |
 |-------|-------|
-| March | More NPCs, canvassing scenarios |
-| April | Events expansion, debate improvements |
-| May | Balance pass, difficulty tuning |
+| March | ✅ Save/load slots + autosave |
+| April | ✅ Debate aftermath + full Day 6-7 loop polish |
+| May | ✅ Campaign scaffolding + progression state |
 
-**Exit Criteria:** 3+ distinct run archetypes feel different.
+**Exit Criteria:** ✅ Full 7-day run and reliable save/load.
 
 ## Phase 3: Polish (June-August)
 **Goal:** Looks and sounds good
 
 | Month | Focus |
 |-------|-------|
-| June | Art pass—consistent pixel style |
-| July | Audio—SFX, simple music loop |
-| August | UX—tutorial text, accessibility |
+| June | ✅ Opening cutscene and campaign mode onboarding |
+| July | ✅ Tutorial hints and first-check explanation |
+| August | ✅ Accessibility controls (font scale, text speed, color modes) |
+
+**Exit Criteria:** ✅ First-time onboarding and replay flow are both in place.
 
 **Exit Criteria:** Game is presentable in screenshots/video.
 

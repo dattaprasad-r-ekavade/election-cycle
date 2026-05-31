@@ -7,11 +7,24 @@
 # Imported textures and samples
 .import/
 
-# Exported build files
+# Exported build files — all platform outputs
 *.export/
 export/
 build/
 html/
+windows/
+android/
+*.apk
+*.aab
+
+# AI assistant / editor metadata
+.claude/
+
+# Stray OS file created by redirecting to nul on Windows
+nul
+
+# Temporary planning / scratch docs (not source)
+phase1.md
 
 # IDE-specific files
 .idea/

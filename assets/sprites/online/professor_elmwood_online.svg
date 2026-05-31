@@ -1,0 +1,30 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 200">
+  <!-- Body -->
+  <rect x="35" y="90" width="50" height="70" rx="6" fill="#4a6fa5"/>
+  <!-- Head -->
+  <ellipse cx="60" cy="68" rx="26" ry="28" fill="#f0c080"/>
+  <!-- Hair -->
+  <ellipse cx="60" cy="44" rx="26" ry="14" fill="#8a5a20"/>
+  <!-- Eyes -->
+  <ellipse cx="51" cy="65" rx="5" ry="6" fill="white"/>
+  <ellipse cx="69" cy="65" rx="5" ry="6" fill="white"/>
+  <circle cx="52" cy="66" r="3" fill="#2a2a2a"/>
+  <circle cx="70" cy="66" r="3" fill="#2a2a2a"/>
+  <!-- Glasses -->
+  <rect x="44" y="60" width="14" height="10" rx="3" fill="none" stroke="#5a3a10" stroke-width="2"/>
+  <rect x="62" y="60" width="14" height="10" rx="3" fill="none" stroke="#5a3a10" stroke-width="2"/>
+  <line x1="58" y1="65" x2="62" y2="65" stroke="#5a3a10" stroke-width="1.5"/>
+  <!-- Mouth -->
+  <path d="M53 78 Q60 84 67 78" fill="none" stroke="#8a4a20" stroke-width="2"/>
+  <!-- Tie -->
+  <polygon points="60,90 55,115 60,120 65,115" fill="#c03030"/>
+  <!-- Arms -->
+  <rect x="15" y="90" width="22" height="12" rx="6" fill="#4a6fa5"/>
+  <rect x="83" y="90" width="22" height="12" rx="6" fill="#4a6fa5"/>
+  <!-- Legs -->
+  <rect x="38" y="155" width="18" height="36" rx="5" fill="#2a3a5a"/>
+  <rect x="64" y="155" width="18" height="36" rx="5" fill="#2a3a5a"/>
+  <!-- Shoes -->
+  <ellipse cx="47" cy="191" rx="12" ry="7" fill="#1a1a1a"/>
+  <ellipse cx="73" cy="191" rx="12" ry="7" fill="#1a1a1a"/>
+</svg>

@@ -14,6 +14,7 @@ const SEED_MAX := 2147483647  # Max 32-bit signed int
 @onready var opponent_type_label: Label = $MarginContainer/VBox/ContentHBox/LeftPanel/LeftMargin/LeftVBox/DistrictInfo/DistrictMargin/DistrictVBox/OpponentType
 @onready var points_label: Label = $MarginContainer/VBox/ContentHBox/RightPanel/RightMargin/RightVBox/PointsRemaining
 @onready var skills_container: VBoxContainer = $MarginContainer/VBox/ContentHBox/RightPanel/RightMargin/RightVBox/SkillsContainer
+@onready var subheader_label: Label = $MarginContainer/VBox/HeaderPanel/HeaderMargin/HeaderVBox/Subheader
 
 # Seed UI elements (will be created dynamically if not in scene)
 var seed_label: Label
@@ -25,8 +26,11 @@ var skill_rows: Dictionary = {}
 
 
 func _ready() -> void:
-	# Generate a new game with random seed
-	GameManager.start_new_game()
+	SettingsSystem.apply_font_scale(self)
+
+	# If no run is already active (quick/campaign from main menu), start fresh.
+	if GameManager.current_day <= 0:
+		GameManager.start_new_game()
 
 	# Give player 5 extra points to allocate
 	SkillSystem.set_starting_allocation(5)
@@ -34,10 +38,19 @@ func _ready() -> void:
 	# Create seed UI
 	_create_seed_ui()
 	_update_seed_display()
+	if GameManager.play_mode == "campaign" and seed_container:
+		seed_container.visible = false
 
 	_update_district_info()
 	_create_skill_rows()
 	_update_points_display()
+
+	if TutorialSystem.should_show_tip("day1_skill_intro"):
+		if GameManager.play_mode == "campaign":
+			subheader_label.text = "\"Campaign Mode: scripted district, fixed seed, and hand-crafted story beats.\""
+		else:
+			subheader_label.text = "\"Allocate SKILL points. Higher stats unlock stronger choices later.\""
+		TutorialSystem.mark_tip_seen("day1_skill_intro")
 
 	# Connect to skill system
 	SkillSystem.points_changed.connect(_on_points_changed)
@@ -59,7 +72,7 @@ func _create_seed_ui() -> void:
 	
 	# Seed label
 	seed_label = Label.new()
-	seed_label.text = "► SEED: "
+	seed_label.text = "SEED: "
 	seed_label.add_theme_font_size_override("font_size", 12)
 	seed_container.add_child(seed_label)
 	
@@ -74,7 +87,7 @@ func _create_seed_ui() -> void:
 	
 	# Randomize button
 	seed_randomize_btn = Button.new()
-	seed_randomize_btn.text = "🎲"
+	seed_randomize_btn.text = "RND"
 	seed_randomize_btn.tooltip_text = "Randomize seed"
 	seed_randomize_btn.custom_minimum_size = Vector2(35, 0)
 	seed_randomize_btn.pressed.connect(_on_randomize_seed)
@@ -186,7 +199,7 @@ func _create_skill_row(skill_name: String) -> PanelContainer:
 
 	var name_label := Label.new()
 	name_label.name = "name_label"
-	name_label.text = "► " + SkillSystem.get_skill_display_name(skill_name).to_upper()
+	name_label.text = SkillSystem.get_skill_display_name(skill_name).to_upper()
 	name_label.add_theme_font_size_override("font_size", 14)
 	name_container.add_child(name_label)
 
@@ -202,7 +215,7 @@ func _create_skill_row(skill_name: String) -> PanelContainer:
 	# Minus button
 	var minus_btn := Button.new()
 	minus_btn.name = "minus_btn"
-	minus_btn.text = "◄"
+	minus_btn.text = "-"
 	minus_btn.custom_minimum_size = Vector2(35, 35)
 	minus_btn.pressed.connect(_on_minus_pressed.bind(skill_name))
 	row.add_child(minus_btn)
@@ -220,7 +233,7 @@ func _create_skill_row(skill_name: String) -> PanelContainer:
 	# Plus button
 	var plus_btn := Button.new()
 	plus_btn.name = "plus_btn"
-	plus_btn.text = "►"
+	plus_btn.text = "+"
 	plus_btn.custom_minimum_size = Vector2(35, 35)
 	plus_btn.pressed.connect(_on_plus_pressed.bind(skill_name))
 	row.add_child(plus_btn)
@@ -251,7 +264,7 @@ func _on_skill_changed(skill_name: String, new_value: int) -> void:
 
 func _update_points_display() -> void:
 	var remaining := SkillSystem.get_points_remaining()
-	points_label.text = "► REMAINING: %d" % remaining
+	points_label.text = "REMAINING: %d" % remaining
 
 
 func _on_name_changed(new_text: String) -> void:
@@ -272,6 +285,7 @@ func _on_start_pressed() -> void:
 
 	# Day 1 (Registration) is complete. Advance to Day 2 (Canvassing).
 	GameManager.advance_day()
+	SaveSystem.save_to_slot(SaveSystem.active_slot, true)
 
-	# Transition to the game scene
-	get_tree().change_scene_to_file("res://scenes/game.tscn")
+	# Transition to the town scene for the spatial Day 2-3 loop.
+	get_tree().change_scene_to_file("res://scenes/town.tscn")

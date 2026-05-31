@@ -26,6 +26,8 @@ const DAY_NAMES := [
 var current_day: int = 0
 var current_phase: GamePhase = GamePhase.MENU
 var run_seed: int = 0
+var play_mode: String = "quick"  # quick | campaign
+var campaign_scenario_id: String = ""
 
 # Player info
 var player_name: String = "Candidate"
@@ -119,6 +121,23 @@ func start_new_game(seed_value: int = 0) -> void:
 
 	print("[GameManager] New game started with seed: %d" % run_seed)
 	# Note: Day 1 is character creation. advance_day() is called when player clicks Start.
+
+
+func apply_campaign_profile(profile: Dictionary) -> void:
+	"""Override generated district/opponent/crisis with scripted campaign profile."""
+	if profile.has("district_name"):
+		district_name = String(profile.get("district_name", district_name))
+	if profile.has("district_theme"):
+		district_theme = String(profile.get("district_theme", district_theme))
+	if profile.has("main_crisis"):
+		main_crisis = String(profile.get("main_crisis", main_crisis))
+	if profile.has("opponent_name"):
+		opponent_name = String(profile.get("opponent_name", opponent_name))
+	if profile.has("opponent_archetype"):
+		opponent_archetype = String(profile.get("opponent_archetype", opponent_archetype))
+
+	for flag_name in profile.get("scripted_flags", []):
+		set_run_flag(String(flag_name), true)
 
 
 
@@ -858,3 +877,63 @@ func return_to_menu() -> void:
 	"""Return to main menu"""
 	current_phase = GamePhase.MENU
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+
+
+func export_state() -> Dictionary:
+	"""Serialize current game manager state for save slots."""
+	return {
+		"current_day": current_day,
+		"current_phase": int(current_phase),
+		"run_seed": run_seed,
+		"play_mode": play_mode,
+		"campaign_scenario_id": campaign_scenario_id,
+		"player_name": player_name,
+		"campaign_slogan": campaign_slogan,
+		"promises_made": promises_made,
+		"promises_broken": promises_broken,
+		"promise_contradictions": promise_contradictions,
+		"scandals": scandals,
+		"scandal_risks": scandal_risks,
+		"endorsements": endorsements,
+		"run_flags": run_flags,
+		"event_log": event_log,
+		"npc_trust": npc_trust,
+		"district_support": district_support,
+		"district_support_history": district_support_history,
+		"district_name": district_name,
+		"district_theme": district_theme,
+		"main_crisis": main_crisis,
+		"opponent_name": opponent_name,
+		"opponent_archetype": opponent_archetype,
+		"media_bias": media_bias,
+		"hidden_params": hidden_params,
+	}
+
+
+func import_state(data: Dictionary) -> void:
+	"""Hydrate game manager from a saved dictionary."""
+	current_day = int(data.get("current_day", 1))
+	current_phase = int(data.get("current_phase", GamePhase.PLAYING))
+	run_seed = int(data.get("run_seed", 1))
+	play_mode = String(data.get("play_mode", "quick"))
+	campaign_scenario_id = String(data.get("campaign_scenario_id", ""))
+	player_name = String(data.get("player_name", "Candidate"))
+	campaign_slogan = String(data.get("campaign_slogan", ""))
+	promises_made.assign(data.get("promises_made", []))
+	promises_broken.assign(data.get("promises_broken", []))
+	promise_contradictions.assign(data.get("promise_contradictions", []))
+	scandals.assign(data.get("scandals", []))
+	scandal_risks.assign(data.get("scandal_risks", []))
+	endorsements.assign(data.get("endorsements", []))
+	run_flags = data.get("run_flags", {})
+	event_log.assign(data.get("event_log", []))
+	npc_trust = data.get("npc_trust", {})
+	district_support = int(data.get("district_support", 0))
+	district_support_history.assign(data.get("district_support_history", []))
+	district_name = String(data.get("district_name", ""))
+	district_theme = String(data.get("district_theme", ""))
+	main_crisis = String(data.get("main_crisis", ""))
+	opponent_name = String(data.get("opponent_name", ""))
+	opponent_archetype = String(data.get("opponent_archetype", ""))
+	media_bias = float(data.get("media_bias", 0.0))
+	hidden_params = data.get("hidden_params", {})

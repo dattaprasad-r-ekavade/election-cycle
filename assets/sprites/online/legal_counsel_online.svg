@@ -1,0 +1,34 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 200">
+  <!-- Body / suit -->
+  <rect x="33" y="90" width="54" height="72" rx="6" fill="#2a2a3a"/>
+  <!-- Head -->
+  <ellipse cx="60" cy="66" rx="25" ry="27" fill="#e8b070"/>
+  <!-- Hair -->
+  <ellipse cx="60" cy="42" rx="25" ry="12" fill="#1a1a1a"/>
+  <!-- Eyes -->
+  <ellipse cx="51" cy="63" rx="5" ry="6" fill="white"/>
+  <ellipse cx="69" cy="63" rx="5" ry="6" fill="white"/>
+  <circle cx="52" cy="64" r="3" fill="#1a1a4a"/>
+  <circle cx="70" cy="64" r="3" fill="#1a1a4a"/>
+  <!-- Serious mouth -->
+  <line x1="53" y1="78" x2="67" y2="78" stroke="#7a3a10" stroke-width="2"/>
+  <!-- Shirt + tie -->
+  <rect x="50" y="90" width="20" height="30" fill="white"/>
+  <polygon points="60,93 56,118 60,122 64,118" fill="#1a4a8a"/>
+  <!-- Lapels -->
+  <polygon points="50,90 43,105 50,100" fill="#1a1a2a"/>
+  <polygon points="70,90 77,105 70,100" fill="#1a1a2a"/>
+  <!-- Arms -->
+  <rect x="13" y="90" width="22" height="12" rx="6" fill="#2a2a3a"/>
+  <rect x="85" y="90" width="22" height="12" rx="6" fill="#2a2a3a"/>
+  <!-- Briefcase -->
+  <rect x="83" y="112" width="26" height="20" rx="3" fill="#8a6a30"/>
+  <rect x="91" y="108" width="10" height="6" rx="2" fill="none" stroke="#8a6a30" stroke-width="2"/>
+  <line x1="83" y1="122" x2="109" y2="122" stroke="#5a4010" stroke-width="1.5"/>
+  <!-- Legs -->
+  <rect x="36" y="158" width="19" height="34" rx="5" fill="#1a1a2a"/>
+  <rect x="65" y="158" width="19" height="34" rx="5" fill="#1a1a2a"/>
+  <!-- Shoes -->
+  <ellipse cx="45" cy="192" rx="13" ry="7" fill="#0a0a0a"/>
+  <ellipse cx="74" cy="192" rx="13" ry="7" fill="#0a0a0a"/>
+</svg>

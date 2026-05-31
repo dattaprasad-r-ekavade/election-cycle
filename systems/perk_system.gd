@@ -724,6 +724,22 @@ func can_use_viral_moment() -> bool:
 	return usage.get("times_used", 0) < 1
 
 
+func export_state() -> Dictionary:
+	"""Serialize active perk state for save slots."""
+	return {
+		"active_perks": active_perks,
+		"perk_slots": perk_slots,
+		"perk_usage": perk_usage,
+	}
+
+
+func import_state(data: Dictionary) -> void:
+	"""Hydrate active perk state from save payload."""
+	active_perks.assign(data.get("active_perks", []))
+	perk_slots = int(data.get("perk_slots", STARTING_PERK_SLOTS))
+	perk_usage = data.get("perk_usage", {})
+
+
 func use_viral_moment() -> bool:
 	"""Use Viral Moment to force critical success"""
 	if not can_use_viral_moment():
