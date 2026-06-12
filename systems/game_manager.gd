@@ -930,8 +930,9 @@ func export_state() -> Dictionary:
 func import_state(data: Dictionary) -> void:
 	"""Hydrate game manager from a saved dictionary."""
 	current_day = int(data.get("current_day", 1))
-	current_phase = int(data.get("current_phase", GamePhase.PLAYING))
+	current_phase = int(data.get("current_phase", GamePhase.PLAYING)) as GamePhase
 	run_seed = int(data.get("run_seed", 1))
+	seed(run_seed)
 	play_mode = String(data.get("play_mode", "quick"))
 	campaign_scenario_id = String(data.get("campaign_scenario_id", ""))
 	player_name = String(data.get("player_name", "Candidate"))

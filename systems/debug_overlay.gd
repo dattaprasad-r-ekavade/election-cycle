@@ -209,13 +209,8 @@ func _update_content() -> void:
 func _run_seed_test() -> void:
 	"""Run deterministic seed test from debug overlay (F5)"""
 	print("[DebugOverlay] Running seed determinism test...")
-	var test_node := Node.new()
-	var test_script: GDScript = load("res://tests/seed_test.gd")
-	test_node.set_script(test_script)
-	add_child(test_node)
-	# Test runs in _ready, results printed to console
-	# Clean up after a frame
-	await get_tree().process_frame
-	await get_tree().process_frame
-	test_node.queue_free()
-	print("[DebugOverlay] Seed test complete. Check console output.")
+	var test_script: Script = load("res://tests/seed_test_logic.gd")
+	var runner: Node = test_script.new()
+	var result: Dictionary = runner.run()
+	var status := "PASSED" if bool(result.get("passed", false)) else "FAILED"
+	print("[DebugOverlay] Seed test %s. %s" % [status, String(result.get("details", "")).strip_edges()])

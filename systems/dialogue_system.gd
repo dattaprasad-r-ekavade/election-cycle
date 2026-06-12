@@ -232,6 +232,16 @@ func clear_flags() -> void:
 	flags.clear()
 
 
+func export_state() -> Dictionary:
+	"""Serialize dialogue flags for saves."""
+	return {"flags": flags}
+
+
+func import_state(data: Dictionary) -> void:
+	"""Restore dialogue flags from a save."""
+	flags = data.get("flags", {})
+
+
 func _normalize_dialogue(data: Dictionary) -> Dictionary:
 	if not data.has("nodes"):
 		return data
