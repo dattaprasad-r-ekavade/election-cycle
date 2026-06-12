@@ -77,13 +77,11 @@ func load_from_slot(slot: int) -> bool:
 	active_slot = slot
 	slot_loaded.emit(slot)
 
-	# Route to scene based on loaded day.
+	# Route to scene based on loaded day. Days 2-7 all live in the town now.
 	if GameManager.current_day <= 1:
 		get_tree().change_scene_to_file("res://scenes/character_creation.tscn")
-	elif GameManager.current_day <= 3:
-		get_tree().change_scene_to_file("res://scenes/town.tscn")
 	else:
-		get_tree().change_scene_to_file("res://scenes/game.tscn")
+		get_tree().change_scene_to_file("res://scenes/town.tscn")
 	return true
 
 

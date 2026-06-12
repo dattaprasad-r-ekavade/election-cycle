@@ -1,13 +1,18 @@
 extends Node
 
+## Campaign mode: "The Unlikely Mayor Tour".
+## Ten scripted towns. Winning a town unlocks the next stop.
+
 signal campaign_progress_changed()
 
 const CAMPAIGN_FILE := "res://content/campaign_mode.json"
 const PROGRESS_FILE := "user://campaign_progress.json"
 
+var meta: Dictionary = {}
 var scenarios: Array = []
 var progress: Dictionary = {
 	"completed": [],
+	"won": [],
 }
 
 var active_scenario_id: String = ""
@@ -32,6 +37,8 @@ func _load_scenarios() -> void:
 	if err != OK or typeof(json.data) != TYPE_DICTIONARY:
 		return
 	scenarios = json.data.get("scenarios", [])
+	meta = json.data.get("meta", {})
+	scenarios.sort_custom(func(a, b): return int(a.get("index", 0)) < int(b.get("index", 0)))
 
 
 func _load_progress() -> void:
@@ -49,6 +56,8 @@ func _load_progress() -> void:
 	progress = json.data
 	if not progress.has("completed"):
 		progress["completed"] = []
+	if not progress.has("won"):
+		progress["won"] = []
 
 
 func _save_progress() -> void:
@@ -59,22 +68,28 @@ func _save_progress() -> void:
 	file.close()
 
 
-func get_completed_count() -> int:
-	return int((progress.get("completed", []) as Array).size())
+func has_won(scenario_id: String) -> bool:
+	return (progress.get("won", []) as Array).has(scenario_id)
+
+
+func get_won_count() -> int:
+	return (progress.get("won", []) as Array).size()
+
+
+func is_unlocked(scenario: Dictionary) -> bool:
+	var idx := int(scenario.get("index", 0))
+	if idx <= 1:
+		return true
+	for s in scenarios:
+		if int(s.get("index", 0)) == idx - 1:
+			return has_won(String(s.get("id", "")))
+	return false
 
 
 func get_unlocked_scenarios() -> Array:
-	var completed_count := get_completed_count()
 	var unlocked: Array = []
 	for scenario in scenarios:
-		var idx := int(scenario.get("index", 0))
-		if idx <= 3:
-			unlocked.append(scenario)
-		elif idx <= 6 and completed_count >= 2:
-			unlocked.append(scenario)
-		elif idx <= 9 and completed_count >= 5:
-			unlocked.append(scenario)
-		elif idx == 10 and completed_count >= 9:
+		if is_unlocked(scenario):
 			unlocked.append(scenario)
 	return unlocked
 
@@ -86,9 +101,22 @@ func get_scenario(scenario_id: String) -> Dictionary:
 	return {}
 
 
+func get_active_scenario() -> Dictionary:
+	return get_scenario(active_scenario_id)
+
+
+func is_tour_complete() -> bool:
+	for scenario in scenarios:
+		if not has_won(String(scenario.get("id", ""))):
+			return false
+	return not scenarios.is_empty()
+
+
 func start_campaign_scenario(scenario_id: String) -> bool:
 	var scenario := get_scenario(scenario_id)
 	if scenario.is_empty():
+		return false
+	if not is_unlocked(scenario):
 		return false
 
 	active_scenario_id = scenario_id
@@ -105,12 +133,27 @@ func clear_active_scenario() -> void:
 	GameManager.campaign_scenario_id = ""
 
 
-func _on_game_ended(_won: bool, _results: Dictionary) -> void:
-	if active_scenario_id == "":
+func _on_game_ended(won: bool, _results: Dictionary) -> void:
+	var scenario_id := active_scenario_id
+	if scenario_id == "" and GameManager.play_mode == "campaign":
+		scenario_id = GameManager.campaign_scenario_id
+	if scenario_id == "":
 		return
+
+	var changed := false
 	var completed: Array = progress.get("completed", [])
-	if not completed.has(active_scenario_id):
-		completed.append(active_scenario_id)
+	if not completed.has(scenario_id):
+		completed.append(scenario_id)
 		progress["completed"] = completed
+		changed = true
+
+	if won:
+		var won_list: Array = progress.get("won", [])
+		if not won_list.has(scenario_id):
+			won_list.append(scenario_id)
+			progress["won"] = won_list
+			changed = true
+
+	if changed:
 		_save_progress()
 		campaign_progress_changed.emit()

@@ -438,7 +438,7 @@ func _show_results() -> void:
 	text += "\n[b]═══ WHY YOU WON/LOST ═══[/b]\n"
 	for i in range(mini(3, factor_rows.size())):
 		var item: Dictionary = factor_rows[i]
-		var label := item.name.capitalize().replace("_", " ")
+		var label: String = String(item.name).capitalize().replace("_", " ")
 		var direction := "helped" if float(item.value) >= 0.0 else "hurt"
 		text += "► %s %s you (%+.1f)\n" % [label, direction, float(item.value)]
 

@@ -8,7 +8,6 @@ extends Control
 @onready var flavor_text: Label = $CenterContainer/MainPanel/MarginContainer/VBoxContainer/FlavorText
 
 var slot_selector: OptionButton
-var campaign_selector: OptionButton
 var continue_button: Button
 var campaign_button: Button
 var settings_button: Button
@@ -46,15 +45,12 @@ func _build_extra_menu_controls() -> void:
 	slot_info_label.modulate = Color(0.75, 0.75, 0.75)
 	menu_vbox.add_child(slot_info_label)
 
-	campaign_selector = OptionButton.new()
-	campaign_selector.custom_minimum_size = Vector2(0, 36)
-	menu_vbox.add_child(campaign_selector)
-
 	campaign_button = Button.new()
-	campaign_button.text = "> CAMPAIGN MODE"
+	campaign_button.text = "> CAMPAIGN: THE UNLIKELY MAYOR TOUR"
 	campaign_button.custom_minimum_size = Vector2(0, 45)
 	campaign_button.pressed.connect(_on_campaign_pressed)
 	menu_vbox.add_child(campaign_button)
+	menu_vbox.move_child(campaign_button, 0)
 
 	continue_button = Button.new()
 	continue_button.text = "> CONTINUE SELECTED SLOT"
@@ -77,26 +73,17 @@ func _on_new_game_pressed() -> void:
 	GameManager.campaign_scenario_id = ""
 	GameManager.start_new_game()
 	SaveSystem.save_to_slot(slot, true)
-	get_tree().change_scene_to_file("res://scenes/character_creation.tscn")
+	# First-ever run gets the Professor Elmwood treatment.
+	if not bool(SettingsSystem.get_value("opening_seen", false)):
+		get_tree().change_scene_to_file("res://scenes/opening_scene.tscn")
+	else:
+		get_tree().change_scene_to_file("res://scenes/character_creation.tscn")
 
 
 func _on_campaign_pressed() -> void:
-	if campaign_selector.get_item_count() == 0:
-		return
-
 	var slot := _get_selected_slot()
-	var selected_index := campaign_selector.get_selected()
-	if selected_index < 0:
-		return
-	var scenario_id := String(campaign_selector.get_item_metadata(selected_index))
-	if scenario_id == "":
-		return
-
 	SaveSystem.set_active_slot(slot)
-	if not CampaignSystem.start_campaign_scenario(scenario_id):
-		return
-	SaveSystem.save_to_slot(slot, true)
-	get_tree().change_scene_to_file("res://scenes/opening_scene.tscn")
+	get_tree().change_scene_to_file("res://scenes/campaign_map.tscn")
 
 
 func _on_continue_pressed() -> void:
@@ -227,17 +214,13 @@ func _refresh_slot_info() -> void:
 
 
 func _refresh_campaign_selector() -> void:
-	if campaign_selector == null:
+	if campaign_button == null:
 		return
-	campaign_selector.clear()
-	var unlocked := CampaignSystem.get_unlocked_scenarios()
-	for scenario in unlocked:
-		var idx := int(scenario.get("index", 0))
-		var title := String(scenario.get("title", "Scenario"))
-		var id := String(scenario.get("id", ""))
-		campaign_selector.add_item("%d. %s" % [idx, title])
-		campaign_selector.set_item_metadata(campaign_selector.get_item_count() - 1, id)
-	campaign_button.disabled = campaign_selector.get_item_count() == 0
+	var won := CampaignSystem.get_won_count()
+	var total: int = CampaignSystem.scenarios.size()
+	if total > 0 and won > 0:
+		campaign_button.text = "> CAMPAIGN: THE UNLIKELY MAYOR TOUR  (★ %d/%d)" % [won, total]
+	campaign_button.disabled = total == 0
 
 
 func _on_slot_changed(_index: int) -> void:

@@ -140,6 +140,22 @@ func apply_campaign_profile(profile: Dictionary) -> void:
 		set_run_flag(String(flag_name), true)
 
 
+func _apply_campaign_start_modifiers() -> void:
+	"""Apply scenario gag modifiers (skill mods, starting support) when the
+	run actually begins (Day 1 -> Day 2)."""
+	if play_mode != "campaign" or campaign_scenario_id == "":
+		return
+	var scenario: Dictionary = CampaignSystem.get_scenario(campaign_scenario_id)
+	if scenario.is_empty():
+		return
+	var mods: Dictionary = scenario.get("modifiers", {})
+	for stat in mods.get("skill_mods", {}):
+		SkillSystem.add_modifier(String(stat), int(mods.skill_mods[stat]))
+	var start_support := int(mods.get("start_support", 0))
+	if start_support != 0:
+		add_district_support(start_support, "local_conditions")
+
+
 
 func _generate_district() -> void:
 	"""Generate district details based on seed, using ContentLoader if available"""
@@ -331,6 +347,7 @@ func advance_day() -> void:
 	# Apply perk game start effects when leaving character creation (Day 1 -> Day 2)
 	if current_day == 1:
 		PerkSystem.apply_game_start_effects()
+		_apply_campaign_start_modifiers()
 
 	current_day += 1
 	day_changed.emit(current_day)
