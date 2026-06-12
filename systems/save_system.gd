@@ -42,6 +42,8 @@ func save_to_slot(slot: int, is_autosave: bool = false) -> bool:
 		"game_manager": GameManager.export_state(),
 		"skill_system": SkillSystem.export_state(),
 		"perk_system": PerkSystem.export_state(),
+		"content_loader": ContentLoader.export_state(),
+		"dialogue_system": DialogueSystem.export_state(),
 	}
 
 	var file := FileAccess.open(get_slot_path(slot), FileAccess.WRITE)
@@ -73,6 +75,10 @@ func load_from_slot(slot: int) -> bool:
 	GameManager.import_state(data.get("game_manager", {}))
 	SkillSystem.import_state(data.get("skill_system", {}))
 	PerkSystem.import_state(data.get("perk_system", {}))
+	if data.has("content_loader"):
+		ContentLoader.import_state(data.get("content_loader", {}))
+	if data.has("dialogue_system"):
+		DialogueSystem.import_state(data.get("dialogue_system", {}))
 
 	active_slot = slot
 	slot_loaded.emit(slot)

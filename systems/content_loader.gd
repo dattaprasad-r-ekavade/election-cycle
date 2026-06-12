@@ -88,6 +88,16 @@ func reset_run_state() -> void:
 	run_history.clear()
 
 
+func export_state() -> Dictionary:
+	"""Serialize per-run scenario pick history for saves."""
+	return {"run_history": run_history}
+
+
+func import_state(data: Dictionary) -> void:
+	"""Restore per-run scenario pick history from a save."""
+	run_history = data.get("run_history", {})
+
+
 func get_random_scenario(day_type: String, day: int = 0) -> Dictionary:
 	"""Get a random scenario for a specific day type"""
 	if not scenarios.has(day_type):
