@@ -26,6 +26,8 @@ const DAY_NAMES := [
 var current_day: int = 0
 var current_phase: GamePhase = GamePhase.MENU
 var run_seed: int = 0
+var run_recipe: Dictionary = {}  # per-component seeds: theme, crisis, opponent, layout, params
+var last_results: Dictionary = {}  # most recent election results (for the results screen)
 var play_mode: String = "quick"  # quick | campaign
 var campaign_scenario_id: String = ""
 
@@ -80,12 +82,23 @@ func _ready() -> void:
 	print("[GameManager] Initialized")
 
 
-func start_new_game(seed_value: int = 0) -> void:
-	"""Start a new game run with optional seed"""
+func start_new_game(seed_value: int = 0, recipe: Dictionary = {}) -> void:
+	"""Start a new game run with optional seed.
+	The run is built from a RECIPE of per-component seeds (roguelike
+	mix-and-match): theme/town name, crisis, opponent, town layout, and
+	hidden params each get their own seed derived from the master seed,
+	so any one can be rerolled without changing the others."""
 	if seed_value == 0:
 		seed_value = randi()
 
 	run_seed = seed_value
+	run_recipe = {
+		"theme": int(recipe.get("theme", component_seed(seed_value, "theme"))),
+		"crisis": int(recipe.get("crisis", component_seed(seed_value, "crisis"))),
+		"opponent": int(recipe.get("opponent", component_seed(seed_value, "opponent"))),
+		"layout": int(recipe.get("layout", component_seed(seed_value, "layout"))),
+		"params": int(recipe.get("params", component_seed(seed_value, "params"))),
+	}
 	seed(run_seed)
 
 	# Reset state - Day 1 is character creation
@@ -105,9 +118,10 @@ func start_new_game(seed_value: int = 0) -> void:
 	district_support_history.clear()
 	hidden_params.clear()
 
-	# Generate district and hidden parameters
+	# Generate district and hidden parameters from the recipe
 	_generate_district()
 	_generate_hidden_params()
+	seed(run_seed)  # reset the gameplay RNG stream after component generation
 
 	# Reset other systems
 	SkillSystem.reset_skills()
@@ -157,11 +171,47 @@ func _apply_campaign_start_modifiers() -> void:
 
 
 
-func _generate_district() -> void:
-	"""Generate district details based on seed, using ContentLoader if available"""
-	var themes := ["Industrial", "Suburban", "Downtown", "Rural", "Coastal", "University"]
+static func component_seed(master_seed: int, component: String) -> int:
+	"""Derive a stable per-component seed from the master seed."""
+	return absi(hash("%d|%s" % [master_seed, component])) % 2147483647
 
-	# Try to get crisis from ContentLoader
+
+func reroll_component(component: String) -> void:
+	"""Roguelike remix: reroll ONE component of the run while keeping
+	the rest intact. Valid: theme, crisis, opponent, layout, params."""
+	if not run_recipe.has(component):
+		return
+	run_recipe[component] = randi() % 2147483647
+	match component:
+		"theme":
+			_generate_theme_and_name()
+		"crisis":
+			_generate_crisis()
+		"opponent":
+			_generate_opponent()
+		"params":
+			hidden_params.clear()
+			_generate_hidden_params()
+		"layout":
+			pass  # consumed by the town scene on load
+	seed(run_seed)
+	print("[GameManager] Rerolled %s -> %d" % [component, run_recipe[component]])
+
+
+func get_layout_seed() -> int:
+	return int(run_recipe.get("layout", run_seed))
+
+
+func _generate_district() -> void:
+	"""Generate district details from the recipe's component seeds."""
+	_generate_crisis()
+	_generate_opponent()
+	_generate_theme_and_name()
+	print("[GameManager] District: %s, Crisis: %s, Opponent: %s (%s)" % [district_name, main_crisis, opponent_name, opponent_archetype])
+
+
+func _generate_crisis() -> void:
+	seed(int(run_recipe.get("crisis", run_seed)))
 	if ContentLoader and ContentLoader.is_loaded and not ContentLoader.crises.is_empty():
 		var crisis_data := ContentLoader.get_random_crisis()
 		main_crisis = crisis_data.get("name", "Generic Crisis")
@@ -169,7 +219,9 @@ func _generate_district() -> void:
 		var crises := ["The Rat Problem", "Gentrification", "The Bridge Problem", "The Pill Problem", "Bar Zoning Crisis"]
 		main_crisis = crises[randi() % crises.size()]
 
-	# Try to get opponent from ContentLoader
+
+func _generate_opponent() -> void:
+	seed(int(run_recipe.get("opponent", run_seed)))
 	if ContentLoader and ContentLoader.is_loaded and not ContentLoader.opponents.is_empty():
 		var opponent_data := ContentLoader.get_random_opponent()
 		opponent_name = "%s %s" % [opponent_data.get("name_first", "John"), opponent_data.get("name_last", "Doe")]
@@ -181,21 +233,23 @@ func _generate_district() -> void:
 		var last_names := ["Wellman", "Worthington", "Flippman", "Thunderson"]
 		opponent_name = "%s %s" % [first_names[randi() % first_names.size()], last_names[randi() % last_names.size()]]
 
+
+func _generate_theme_and_name() -> void:
+	seed(int(run_recipe.get("theme", run_seed)))
+	var themes := ["Industrial", "Suburban", "Downtown", "Rural", "Coastal", "University"]
 	district_theme = themes[randi() % themes.size()]
 
-	# Generate district name
 	var district_prefixes := ["North", "South", "East", "West", "New", "Old", "Greater"]
 	var district_suffixes := ["Heights", "Valley", "Borough", "District", "Ward", "Commons"]
 	district_name = "%s %s %s" % [district_prefixes[randi() % district_prefixes.size()], district_theme, district_suffixes[randi() % district_suffixes.size()]]
-
-	media_bias = randf_range(-0.5, 0.5)
-
-	print("[GameManager] District: %s, Crisis: %s, Opponent: %s (%s)" % [district_name, main_crisis, opponent_name, opponent_archetype])
 
 
 func _generate_hidden_params() -> void:
 	"""Generate hidden parameters that affect the election.
 	These are environmental/external factors not shown to the player."""
+	seed(int(run_recipe.get("params", run_seed)))
+
+	media_bias = randf_range(-0.5, 0.5)
 
 	# === WEATHER & TIMING ===
 	var seasons := ["spring", "summer", "fall", "winter"]
@@ -765,6 +819,7 @@ func calculate_election_results() -> Dictionary:
 func end_game() -> void:
 	"""End the current game run"""
 	var results := calculate_election_results()
+	last_results = results
 	current_phase = GamePhase.MENU
 	game_ended.emit(results.won, results)
 	print("[GameManager] Game ended - Won: %s" % results.won)
@@ -902,6 +957,7 @@ func export_state() -> Dictionary:
 		"current_day": current_day,
 		"current_phase": int(current_phase),
 		"run_seed": run_seed,
+		"run_recipe": run_recipe,
 		"play_mode": play_mode,
 		"campaign_scenario_id": campaign_scenario_id,
 		"player_name": player_name,
@@ -932,6 +988,11 @@ func import_state(data: Dictionary) -> void:
 	current_day = int(data.get("current_day", 1))
 	current_phase = int(data.get("current_phase", GamePhase.PLAYING)) as GamePhase
 	run_seed = int(data.get("run_seed", 1))
+	run_recipe = data.get("run_recipe", {})
+	if run_recipe.is_empty():
+		# Back-compat: derive recipe from master seed for older saves
+		for component in ["theme", "crisis", "opponent", "layout", "params"]:
+			run_recipe[component] = component_seed(run_seed, component)
 	seed(run_seed)
 	play_mode = String(data.get("play_mode", "quick"))
 	campaign_scenario_id = String(data.get("campaign_scenario_id", ""))

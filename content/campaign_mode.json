@@ -9,7 +9,8 @@
       "index": 1,
       "id": "hometown",
       "title": "Mom Said Run",
-      "subtitle": "HOMETOWN",
+      "subtitle": "HOMETOWN — TRAINING",
+      "tutorial": true,
       "seed": 1101,
       "town_style": "hometown",
       "district_name": "Dillard's Hollow",
@@ -27,6 +28,20 @@
       ],
       "modifiers": {"start_support": 5},
       "scripted_flags": ["campaign_hometown", "campaign_mom_is_watching"],
+      "day_cutscenes": {
+        "2": {"visitor": "Mom", "palette": "mom", "lines": [
+          {"speaker": "Mom", "text": "There you are! I brought sandwiches for your campaign staff."},
+          {"speaker": "You", "text": "Mom, I don't have staff."},
+          {"speaker": "Mom", "text": "Then they're all for the voters. Start with the Hendersons — they owe me from bingo."},
+          {"speaker": "Mom", "text": "And stand up straight. Earl slouches, and look where THAT got this town."}
+        ]},
+        "6": {"visitor": "Mom", "palette": "mom", "lines": [
+          {"speaker": "Mom", "text": "Big debate today! I told everyone at church. Attendance may exceed the fire code."},
+          {"speaker": "You", "text": "No pressure then."},
+          {"speaker": "Mom", "text": "Earl debates like a fax machine, sweetie. Just speak in complete sentences and you've won."},
+          {"speaker": "Mom", "text": "I put a good-luck sandwich in your pocket. Don't check now. Trust."}
+        ]}
+      },
       "epilogue_win": "Mom puts your victory in the church newsletter. The pothole remains unfixed, but it's YOUR pothole now. Word of your win travels. A college town calls...",
       "epilogue_lose": "Earl wins again, mostly by accident. Mom says she's 'not disappointed, just recalibrating.' Try again, sweetie."
     },
@@ -51,6 +66,20 @@
       ],
       "modifiers": {"skill_mods": {"legitimacy": -1, "influence": 1}},
       "scripted_flags": ["campaign_college"],
+      "day_cutscenes": {
+        "2": {"visitor": "Student Organizer", "palette": "student", "lines": [
+          {"speaker": "Student Organizer", "text": "Candidate! Sign our petition!"},
+          {"speaker": "You", "text": "What's it for?"},
+          {"speaker": "Student Organizer", "text": "It demands a response to our previous petition. It's petitions all the way down."},
+          {"speaker": "Student Organizer", "text": "Anyway — canvass the dorms. Students vote in herds. Frighten one and you lose the whole herd."}
+        ]},
+        "6": {"visitor": "Prof. Verb", "palette": "official", "lines": [
+          {"speaker": "Prof. Verb", "text": "Ah. My opponent. Tell me — is a debate not merely two rivers arguing about the shape of the sea?"},
+          {"speaker": "You", "text": "...It's a stage with two podiums."},
+          {"speaker": "Prof. Verb", "text": "Exactly what a tributary would say. I shall enjoy dissolving you, semantically."},
+          {"speaker": "You", "text": "(He walks away making air quotes at nothing. The crowd loves it.)"}
+        ]}
+      },
       "epilogue_win": "The frat's unaccredited polling agency declares you the winner at 142%. Close enough. The suburbs have heard of you — and the HOAs are sharpening their clipboards.",
       "epilogue_lose": "Professor Verb wins. His acceptance speech is one long metaphor about rivers. Students weep. You don't get it. Try again."
     },
@@ -74,6 +103,19 @@
       ],
       "modifiers": {"skill_mods": {"logic": 1}, "start_support": -5},
       "scripted_flags": ["campaign_hoa"],
+      "day_cutscenes": {
+        "2": {"visitor": "Chair Brenda", "palette": "official", "lines": [
+          {"speaker": "Brenda", "text": "Good morning! Quick inspection. Your campaign buttons — are they regulation diameter?"},
+          {"speaker": "You", "text": "There's a regulation diameter?"},
+          {"speaker": "Brenda", "text": "There is now. I passed it this morning when I saw your buttons."},
+          {"speaker": "Brenda", "text": "Enjoy canvassing! Stay on the paths. The grass has a lawyer."}
+        ]},
+        "6": {"visitor": "Chair Brenda", "palette": "official", "lines": [
+          {"speaker": "Brenda", "text": "Before tonight's debate, you'll need to fill out form D-8: Intent to Disagree Publicly."},
+          {"speaker": "You", "text": "You invented that form today, didn't you."},
+          {"speaker": "Brenda", "text": "I invented it WHILE you were saying that. See you on stage, sweetheart. Bring a pen."}
+        ]}
+      },
       "epilogue_win": "You win. Brenda demands a recount, an inspection of your gutters, and your immediate emotional collapse. She receives none. A rustbelt town wants to meet the HOA slayer.",
       "epilogue_lose": "Brenda wins all five precincts and fines you for losing 'in a non-regulation manner.' Try again."
     },
@@ -98,6 +140,20 @@
       ],
       "modifiers": {"skill_mods": {"kapital": -1, "legitimacy": 1}},
       "scripted_flags": ["campaign_rustbelt"],
+      "day_cutscenes": {
+        "2": {"visitor": "Union Rep", "palette": "worker", "lines": [
+          {"speaker": "Union Rep", "text": "Heads up, candidate. The pigeons are striking today, so the skies are safe. Mostly."},
+          {"speaker": "You", "text": "What do striking pigeons even want?"},
+          {"speaker": "Union Rep", "text": "Better statues. Anyway — knock on doors, look people in the eye, and never badmouth the purple smoke."},
+          {"speaker": "Union Rep", "text": "The smoke has seniority."}
+        ]},
+        "6": {"visitor": "Big Dan", "palette": "worker", "lines": [
+          {"speaker": "Big Dan", "text": "Debate night. I'll be honest with you, kid, 'cause that's all I know how to be."},
+          {"speaker": "Big Dan", "text": "You've got fancier words than me. But I've got forty years of this town under my fingernails."},
+          {"speaker": "You", "text": "May the best candidate win?"},
+          {"speaker": "Big Dan", "text": "That's the spirit. Now shake my hand. Brace yourself first."}
+        ]}
+      },
       "epilogue_win": "Big Dan shakes your hand so hard your watch stops. 'You'll do right by us,' he says. The purple smoke turns a respectful gray for one day. A resort town calls — they have tourist problems.",
       "epilogue_lose": "Big Dan wins. The town celebrates with a parade that is also somehow a strike. Try again."
     },
@@ -122,6 +178,19 @@
       ],
       "modifiers": {"skill_mods": {"influence": -1, "speechcraft": 1}},
       "scripted_flags": ["campaign_tourist"],
+      "day_cutscenes": {
+        "2": {"visitor": "Skyler Jetlag", "palette": "vlogger", "lines": [
+          {"speaker": "Skyler", "text": "VoteFam, look who it is! Day one of my rival's doomed campaign. Say something for the stream!"},
+          {"speaker": "You", "text": "Please stop filming me."},
+          {"speaker": "Skyler", "text": "Iconic. That's going in the thumbnail. Anyway, good luck canvassing — the tourists bite, but only the feral ones."},
+          {"speaker": "Skyler", "text": "Which is all of them. SMASH that vote button!"}
+        ]},
+        "6": {"visitor": "Skyler Jetlag", "palette": "vlogger", "lines": [
+          {"speaker": "Skyler", "text": "Debate day vlog, episode one: confronting my opponent. How are you FEELING? Be raw. Be real."},
+          {"speaker": "You", "text": "I feel like you've already edited this conversation."},
+          {"speaker": "Skyler", "text": "Six jump cuts so far. See you on stage! The lighthouse guy says he's moderating. Nobody asked him to."}
+        ]}
+      },
       "epilogue_win": "You win. Skyler's concession speech gets 12M views and a brand deal. The lighthouse man votes for you, illegally, twice. Silicon Gulch has noticed your numbers...",
       "epilogue_lose": "Skyler wins and immediately leaves for a collab in Bali. The town is governed via vlog. Try again."
     },
@@ -146,6 +215,20 @@
       ],
       "modifiers": {"skill_mods": {"logic": 1, "kapital": -1}},
       "scripted_flags": ["campaign_tech"],
+      "day_cutscenes": {
+        "2": {"visitor": "Blaze Disruptson", "palette": "exec", "lines": [
+          {"speaker": "Blaze", "text": "Hey! Quick founder-to-founder chat. Canvassing is SO analog. Have you considered an app?"},
+          {"speaker": "You", "text": "Your last app started charging people rent for their own driveways."},
+          {"speaker": "Blaze", "text": "Driveway-as-a-Service. The market LOVED it. The courts, less so."},
+          {"speaker": "Blaze", "text": "Anyway, go knock on doors like it's 1950. Adorable. I'll be optimizing."}
+        ]},
+        "6": {"visitor": "Blaze (Deepfake)", "palette": "exec", "lines": [
+          {"speaker": "Blaze (Deepfake)", "text": "GREETINGS, OPPONENT. I AM BLAZE. THE REAL BLAZE. NOTE MY EXTREMELY NORMAL BLINKING."},
+          {"speaker": "You", "text": "You're the deepfake, aren't you."},
+          {"speaker": "Blaze (Deepfake)", "text": "THE REAL BLAZE IS AT A RETREAT. I WILL DEBATE YOU TONIGHT. I HAVE BEEN TRAINED ON HIS BEST TWEETS."},
+          {"speaker": "You", "text": "(It bows at a 90-degree angle and leaves. The crowd waves at it.)"}
+        ]}
+      },
       "epilogue_win": "You win. The parking app concedes on Blaze's behalf, then demands a pardon. The fire department is freed from its paywall. Then you fall asleep at your desk, exhausted...",
       "epilogue_lose": "Blaze wins via a get-out-the-vote push notification with a 'VOTE NOW (1 free trial)' button. Try again."
     },
@@ -171,6 +254,20 @@
       ],
       "modifiers": {"start_support": -10},
       "scripted_flags": ["campaign_dream"],
+      "day_cutscenes": {
+        "2": {"visitor": "You, But Better", "palette": "clone", "lines": [
+          {"speaker": "You, But Better", "text": "Canvassing day. Remember canvassing in Dillard's Hollow? You said 'you too' when a voter wished you luck."},
+          {"speaker": "You", "text": "That was YEARS ago."},
+          {"speaker": "You, But Better", "text": "The voter remembers. I remember. The duck remembers."},
+          {"speaker": "You", "text": "(The duck nods. This is going to be a long week.)"}
+        ]},
+        "6": {"visitor": "Your Logic Stat", "palette": "shadow", "lines": [
+          {"speaker": "Your Logic Stat", "text": "Hello. I'm your Logic stat. We need to talk about tonight's debate."},
+          {"speaker": "You", "text": "My stats can TALK here?"},
+          {"speaker": "Your Logic Stat", "text": "Speechcraft hasn't stopped talking since Tuesday. Listen: your opponent is you. Every trick you know, they know."},
+          {"speaker": "Your Logic Stat", "text": "So do the one thing they'd never expect. Be sincere. Ugh. I can't believe I said that."}
+        ]}
+      },
       "epilogue_win": "You beat yourself. Therapists everywhere feel a disturbance. You wake up on your desk in Silicon Gulch, drooling on a ballot, finally sure of one thing: you actually want this. Next stop: the big leagues.",
       "epilogue_lose": "You lose to yourself, which is somehow worse than every previous loss combined. You wake up anyway. The doubt remains. Re-enter the dream and finish it."
     },
@@ -195,6 +292,20 @@
       ],
       "modifiers": {"skill_mods": {"legitimacy": -1, "influence": 1}, "start_support": -5},
       "scripted_flags": ["campaign_crime"],
+      "day_cutscenes": {
+        "2": {"visitor": "Aunt Carmela", "palette": "mom", "lines": [
+          {"speaker": "Aunt Carmela", "text": "So. You're the new candidate. The Council of Aunts has questions."},
+          {"speaker": "You", "text": "I'd be happy to answer—"},
+          {"speaker": "Aunt Carmela", "text": "Question one: have you eaten? You look thin. Question two: where do you stand on the raccoons?"},
+          {"speaker": "You", "text": "Uh — no, and... cautiously pro-raccoon?"},
+          {"speaker": "Aunt Carmela", "text": "Good answers. You'll hear from us. Eat something."}
+        ]},
+        "6": {"visitor": "Sal Moretti", "palette": "exec", "lines": [
+          {"speaker": "Sal", "text": "Tonight's the debate. I just came to wish you luck. Personally. With my famously clean hands."},
+          {"speaker": "You", "text": "Why do I hear sirens?"},
+          {"speaker": "Sal", "text": "The city has a rich soundscape. Break a leg tonight! That's an expression. Mostly."}
+        ]}
+      },
       "epilogue_win": "You win. The Council of Aunts approves. The raccoons send a tribute of shiny objects. Sal congratulates you with a smile that's already planning something. National media arrives in town...",
       "epilogue_lose": "Sal wins with 99.8% turnout, including several cemeteries. 'Coincidence,' he says, as sirens play. Try again."
     },
@@ -219,6 +330,20 @@
       ],
       "modifiers": {"skill_mods": {"speechcraft": 1, "logic": -1}},
       "scripted_flags": ["campaign_national"],
+      "day_cutscenes": {
+        "2": {"visitor": "Reporter", "palette": "reporter", "lines": [
+          {"speaker": "Reporter", "text": "Candidate! Quick question for the noon, three o'clock, and emergency broadcasts:"},
+          {"speaker": "Reporter", "text": "You beat yourself in a dream election. Critics say that's unstable. Supporters say it's growth. Which is it?"},
+          {"speaker": "You", "text": "...Can I do a 'no comment' that sounds confident?"},
+          {"speaker": "Reporter", "text": "That's the most electable thing you've ever said. Rolling in five!"}
+        ]},
+        "6": {"visitor": "Tawny's Makeup Artist", "palette": "vlogger", "lines": [
+          {"speaker": "Makeup Artist", "text": "Hold still. Tawny sent me to do your face for the debate."},
+          {"speaker": "You", "text": "Why would my opponent send me a makeup artist?"},
+          {"speaker": "Makeup Artist", "text": "The documentary, darling. The villain has to look GOOD in the slow-motion losing shots."},
+          {"speaker": "You", "text": "(You allow it. You do look fantastic.)"}
+        ]}
+      },
       "epilogue_win": "You win the town that predicts everything. Pundits declare you 'nationally viable' and 'probably a real person.' The Capital awaits. Every opponent you've ever beaten is watching.",
       "epilogue_lose": "Tawny wins and announces it via a 6-part docuseries. You appear in episode 3 as 'The Setback.' Try again."
     },
@@ -243,6 +368,19 @@
       ],
       "modifiers": {"start_support": -10},
       "scripted_flags": ["campaign_capital", "campaign_finale"],
+      "day_cutscenes": {
+        "2": {"visitor": "Aide", "palette": "aide", "lines": [
+          {"speaker": "Aide", "text": "Morning briefing: shutdown's Thursday, the monument is still protesting itself, and your 9 AM canvass is now a 9 AM hearing about your canvass."},
+          {"speaker": "You", "text": "How does anyone govern here?"},
+          {"speaker": "Aide", "text": "Nobody's tried in years. Honestly, it's why some of us are rooting for you. Quietly. In a memo. Classified."}
+        ]},
+        "6": {"visitor": "The Composite Candidate", "palette": "shadow", "lines": [
+          {"speaker": "The Composite Candidate", "text": "GOOD EVENING. PRE-DEBATE COURTESY VISIT, AS PERFORMED BY EARL (1974), BRENDA (FORM D-8 ATTACHED), AND SAL (HANDS VISIBLE)."},
+          {"speaker": "You", "text": "You're every opponent I've ever had, and somehow you're still doing courtesy visits."},
+          {"speaker": "The Composite Candidate", "text": "POLITENESS POLLS AT 84%. TONIGHT WE FINISH THIS. YOUR MOTHER HAS BEEN INVITED. SHE BROUGHT SANDWICHES. THEY POLL AT 96%."},
+          {"speaker": "You", "text": "(Beating this thing is going to feel SO good.)"}
+        ]}
+      },
       "epilogue_win": "You did it. From Mom's kitchen to the Capital. The Composite Candidate dissolves into a cloud of consultant invoices. Mom calls: 'I never doubted you. The deposit paid off.' Somewhere, a pothole in Dillard's Hollow is finally — no, it's still there. Some things are eternal. THE END.",
       "epilogue_lose": "The Composite Candidate wins and is immediately stuck in committee, forever. The capital remains ungoverned, which nobody notices. You came so far. Finish it."
     }

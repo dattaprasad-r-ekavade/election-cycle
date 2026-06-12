@@ -167,10 +167,172 @@ func _ready() -> void:
 	_setup_player()
 	_setup_ui()
 	_setup_day()
+	_run_day_intro.call_deferred()
 
 
 func _on_game_ended(_won: bool, results: Dictionary) -> void:
 	election_results = results
+
+
+# ------------------------------------------------------------------ campaign cutscenes
+
+const CUTSCENE_PALETTES := {
+	"mom":      {"shirt": Color("e87898"), "pants": Color("705060"), "hair": Color("c8c0b8"), "has_hat": false},
+	"official": {"shirt": Color("c8b890"), "pants": Color("504840"), "hair": Color("887858"), "has_hat": false},
+	"student":  {"shirt": Color("58b878"), "pants": Color("3858a0"), "hair": Color("c84858"), "has_hat": false},
+	"worker":   {"shirt": Color("e8a030"), "pants": Color("485058"), "hat": Color("f8d030"), "has_hat": true, "hair": Color("583818")},
+	"vlogger":  {"shirt": Color("f06890"), "pants": Color("303848"), "hat": Color("40b8c8"), "has_hat": true, "hair": Color("f8e858")},
+	"exec":     {"shirt": Color("303848"), "pants": Color("282838"), "hair": Color("181818"), "has_hat": false},
+	"shadow":   {"shirt": Color("404858"), "pants": Color("303040"), "hair": Color("282830"), "skin": Color("b8a8c8"), "has_hat": false},
+	"clone":    {"shirt": Color("e84840"), "pants": Color("3858a0"), "hat": Color("e84840"), "has_hat": true, "hair": Color("5a3a20")},
+	"reporter": {"shirt": Color("4878d0"), "pants": Color("484848"), "hair": Color("a06820"), "has_hat": false},
+	"aide":     {"shirt": Color("888098"), "pants": Color("404048"), "hair": Color("605850"), "has_hat": false},
+}
+
+var cutscene_active := false
+
+
+# The hometown scenario doubles as the training campaign: after each day's
+# cutscene, the CAMPAIGN MANUAL explains the mechanic that day introduces.
+const TUTORIAL_TIPS := {
+	2: "[b]Welcome to your campaign![/b] (Mom says hi.)\n\n• Move with [b]WASD / arrow keys[/b]. Press [b]Enter[/b] to talk to people and enter buildings.\n• The bouncing [color=yellow]![/color] marks today's objective. Today: knock on doors in the Neighborhood.\n• [b]Tall grass[/b] hides wild VOTERS. Walk through it for surprise encounters — each one you win builds support.\n• Your [b]SKILL[/b] stats are in the top bar. Choices marked with a skill roll a [b]d10 + that skill[/b] against a difficulty. A 10 is a critical success. A 1 is a story you'll tell in therapy.\n• Zoom with the [b]mouse wheel[/b] or [b]+/-[/b].",
+	3: "[b]Poster day.[/b]\n\n• Today you pick a campaign poster at the Print Shop (or HQ). Posters permanently shift [b]district support[/b] — the big number that wins elections.\n• Check the status line at the bottom of this panel: DISTRICT, CRISIS, RIVAL, and your current SUPPORT.\n• Side tip: toss a coin in the fountain once a day. It is, technically, a bribe. It technically works.",
+	4: "[b]Fundraiser day.[/b]\n\n• Money talks, and today it wants to talk to YOU at the Diner.\n• Donor choices often add [b]scandal RISK[/b] — a percentage chance that a nasty headline drops later. The money is real; so is the risk.\n• High [b]Kapital[/b] unlocks richer options. Low Kapital unlocks desperate ones. Both are content.",
+	5: "[b]Town event day.[/b]\n\n• A crowd waits at the Town Square stage. Public choices here can create [b]promises[/b].\n• Promises are tracked. Contradict one later (build a thing AND cut spending?) and it WILL come up at the debate — and cost you votes.\n• Talking to townsfolk builds [b]NPC trust[/b], which counts separately from district support. Important people sway more voters.",
+	6: "[b]DEBATE DAY.[/b] The boss fight.\n\n• Three rounds at Town Hall. Your opponent has been taking notes on your entire run — expect your own choices quoted back at you.\n• Some replies are [b][LOCKED][/b] — they need higher stats. Your build decides your weapons.\n• Critical failures here go viral. No pressure.",
+	7: "[b]Election day.[/b]\n\n• The count weighs everything: skills, district support, NPC trust, promises kept and broken, scandals, endorsements — plus hidden conditions like weather and the economy (the [b]FATE[/b] dice from the remix screen).\n• Go to the stage when you're ready. Win or lose, you'll see exactly why.\n\nThat's the whole game. Mom believes in you.",
+}
+
+
+func _is_tutorial_run() -> bool:
+	if GameManager.play_mode != "campaign":
+		return false
+	return bool(CampaignSystem.get_scenario(GameManager.campaign_scenario_id).get("tutorial", false))
+
+
+func _run_day_intro() -> void:
+	await _maybe_play_day_cutscene()
+	_maybe_show_tutorial()
+
+
+func _maybe_show_tutorial() -> void:
+	if not _is_tutorial_run():
+		return
+	var day := GameManager.current_day
+	if not TUTORIAL_TIPS.has(day):
+		return
+	var flag := "tutorial_day_%d_seen" % day
+	if GameManager.get_run_flag(flag):
+		return
+	GameManager.set_run_flag(flag, true)
+	_show_flavor("CAMPAIGN MANUAL — DAY %d" % day, TUTORIAL_TIPS[day])
+
+
+func _maybe_play_day_cutscene() -> void:
+	"""Pokemon-style scripted visit: a character walks up and talks to you."""
+	if GameManager.play_mode != "campaign":
+		return
+	var scen: Dictionary = CampaignSystem.get_scenario(GameManager.campaign_scenario_id)
+	var cuts: Dictionary = scen.get("day_cutscenes", {})
+	var key := str(GameManager.current_day)
+	if not cuts.has(key):
+		return
+	var flag := "cutscene_day_%d_seen" % GameManager.current_day
+	if GameManager.get_run_flag(flag):
+		return
+	GameManager.set_run_flag(flag, true)
+	await _play_cutscene(cuts[key])
+
+
+func _play_cutscene(cut: Dictionary) -> void:
+	cutscene_active = true
+	player.input_locked = true
+	await get_tree().create_timer(0.45).timeout
+
+	# Spawn the visitor a few cells away and walk them over.
+	var visitor := Node2D.new()
+	visitor.set_script(NPC_SCRIPT)
+	npcs_root.add_child(visitor)
+	var spawn := _find_cutscene_spawn()
+	var visitor_name := String(cut.get("visitor", "???"))
+	visitor.setup({
+		"name": visitor_name,
+		"lines": [],
+		"cell": spawn,
+		"walker": false,
+		"palette": CUTSCENE_PALETTES.get(String(cut.get("palette", "official")), {}),
+		"walkable_check": _cell_walkable_for_cutscene,
+		"occupied_check": _cell_occupied,
+	})
+	npc_nodes.append(visitor)
+
+	var dest := _adjacent_free_cell(player.grid_cell)
+	if dest != Vector2i(-1, -1):
+		await visitor.walk_to(dest)
+	visitor.face_towards(player.grid_cell)
+	player.facing = Vector2i(signi(visitor.grid_cell.x - player.grid_cell.x), signi(visitor.grid_cell.y - player.grid_cell.y))
+	if player.facing.x != 0 and player.facing.y != 0:
+		player.facing = Vector2i(player.facing.x, 0)
+	player.avatar.facing = player.facing
+	player.avatar.queue_redraw()
+
+	# Dialogue, one line per click.
+	_open_panel(visitor_name)
+	close_panel_button.visible = false
+	next_day_button.visible = false
+	for line in cut.get("lines", []):
+		var speaker := String(line.get("speaker", visitor_name))
+		activity_text.text = "[b]%s:[/b] %s" % [speaker, _replace_placeholders(String(line.get("text", "...")))]
+		await _wait_for_cutscene_continue()
+
+	# Wrap up: close panel, visitor wanders off.
+	_clear_choices()
+	bottom_panel.visible = false
+	next_day_button.visible = true
+	close_panel_button.visible = true
+	await visitor.walk_to(spawn)
+	npc_nodes.erase(visitor)
+	visitor.queue_free()
+	player.input_locked = false
+	cutscene_active = false
+
+
+func _wait_for_cutscene_continue() -> void:
+	_clear_choices()
+	var btn := Button.new()
+	btn.text = "▶  ..."
+	btn.custom_minimum_size = Vector2(0, 38)
+	choices_container.add_child(btn)
+	await btn.pressed
+
+
+func _cell_walkable_for_cutscene(cell: Vector2i) -> bool:
+	# Cutscene visitors may cross roads (dramatic entrances trump traffic law).
+	if not G.is_walkable(town, cell):
+		return false
+	if player and player.grid_cell == cell:
+		return false
+	return true
+
+
+func _find_cutscene_spawn() -> Vector2i:
+	# A walkable cell 4-7 cells away from the player, preferring below/side.
+	var pc: Vector2i = player.grid_cell
+	for radius in [5, 6, 4, 7, 3]:
+		for dir in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, -1)]:
+			var c: Vector2i = pc + dir * radius
+			if c.x > 0 and c.y > 0 and c.x < int(town.width) - 1 and c.y < int(town.height) - 1:
+				if _cell_walkable_for_cutscene(c) and not _cell_occupied(c, null):
+					return c
+	return _adjacent_free_cell(pc)
+
+
+func _adjacent_free_cell(cell: Vector2i) -> Vector2i:
+	for dir in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, -1)]:
+		var c: Vector2i = cell + dir
+		if _cell_walkable_for_cutscene(c) and not _cell_occupied(c, null):
+			return c
+	return Vector2i(-1, -1)
 
 
 # ------------------------------------------------------------------ setup
@@ -183,7 +345,7 @@ func _generate_town() -> void:
 	if style == "":
 		style = G.style_for_theme(GameManager.district_theme)
 
-	town = G.generate(GameManager.run_seed, style)
+	town = G.generate(GameManager.get_layout_seed(), style)
 	map_art.setup(town)
 
 	# Building name labels
@@ -708,70 +870,12 @@ func _advance_debate() -> void:
 
 func _start_results_rally() -> void:
 	if results_shown:
-		_show_final_results()
 		return
 	results_shown = true
 	player.input_locked = true
-	GameManager.end_game()  # emits game_ended; we capture results + CampaignSystem records progress
-	_show_final_results()
-
-
-func _show_final_results() -> void:
-	_open_panel("Town Square — Election Night")
-	close_panel_button.visible = false
-	var results := election_results
-	if results.is_empty():
-		results = GameManager.calculate_election_results()
-
-	var text := ""
-	if results.won:
-		text = "[color=green][b]★ VICTORY! ★[/b][/color]\n\nThe crowd cheers. Someone releases balloons that say 'CONGRATS GRAD.' Close enough.\n\n"
-	else:
-		text = "[color=red][b]DEFEAT[/b][/color]\n\nDemocracy has spoken. It said 'no.' Then it said 'please stop calling.'\n\n"
-
-	text += "[b]FINAL VOTE[/b]\n"
-	text += "• %s: %d votes (%.1f%%)\n" % [GameManager.player_name.to_upper(), results.player_votes, 50 + results.margin / 2]
-	text += "• %s: %d votes (%.1f%%)\n\n" % [GameManager.opponent_name.to_upper(), results.opponent_votes, 50 - results.margin / 2]
-
-	var factor_rows: Array = []
-	for factor_name in results.factors.keys():
-		factor_rows.append({"name": String(factor_name), "value": float(results.factors[factor_name])})
-	factor_rows.sort_custom(func(a, b): return absf(a.value) > absf(b.value))
-	text += "[b]WHY[/b]\n"
-	for i in range(mini(4, factor_rows.size())):
-		var item: Dictionary = factor_rows[i]
-		var color := "green" if item.value >= 0 else "red"
-		text += "• %s: [color=%s]%+.1f[/color]\n" % [item.name.capitalize().replace("_", " "), color, item.value]
-
-	if GameManager.scandals.size() > 0:
-		text += "\n[b]SCANDALS[/b]\n"
-		for scandal in GameManager.scandals:
-			text += "• [color=red]%s[/color]\n" % scandal.headline
-
-	# Campaign epilogue
-	if GameManager.play_mode == "campaign":
-		var scen: Dictionary = CampaignSystem.get_scenario(GameManager.campaign_scenario_id)
-		var epilogue := String(scen.get("epilogue_win" if results.won else "epilogue_lose", ""))
-		if epilogue != "":
-			text += "\n[i]%s[/i]\n" % _replace_placeholders(epilogue)
-		if results.won and int(scen.get("index", 0)) < 10:
-			text += "\n[color=yellow]A new town has been unlocked on the Tour Map![/color]\n"
-
-	activity_text.text = text
-	_clear_choices()
-	next_day_button.visible = false
-
-	if GameManager.play_mode == "campaign":
-		var tour_btn := Button.new()
-		tour_btn.text = "▶ BACK TO THE TOUR MAP"
-		tour_btn.custom_minimum_size = Vector2(0, 42)
-		tour_btn.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/campaign_map.tscn"))
-		choices_container.add_child(tour_btn)
-	var menu_btn := Button.new()
-	menu_btn.text = "▶ MAIN MENU"
-	menu_btn.custom_minimum_size = Vector2(0, 42)
-	menu_btn.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
-	choices_container.add_child(menu_btn)
+	GameManager.end_game()  # emits game_ended; CampaignSystem records progress
+	# Hand off to the Pokemon-style election night screen.
+	get_tree().change_scene_to_file("res://scenes/election_night.tscn")
 
 
 # ------------------------------------------------------------------ choices & dice
@@ -935,35 +1039,32 @@ func _on_next_day_pressed() -> void:
 	_show_news()
 
 
+var news_broadcast: Control
+
+
 func _show_news() -> void:
 	showing_news = true
-	_open_panel("Evening News")
-	close_panel_button.visible = false
-	var headlines := NewsSystem.generate_daily_news()
-	var text := "[b]═══ EVENING NEWS ═══[/b]\n\n"
+	bottom_panel.visible = false
+	player.input_locked = true
 
+	if news_broadcast == null:
+		news_broadcast = Control.new()
+		news_broadcast.set_script(load("res://scripts/news_broadcast.gd"))
+		$UILayer.add_child(news_broadcast)
+		news_broadcast.finished.connect(_continue_from_news)
+
+	var lead_in := ""
 	if GameManager.current_day == 6:
 		var scandals_today := 0
 		for event in GameManager.event_log:
 			if int(event.day) == 6 and event.type == "scandal_triggered":
 				scandals_today += 1
 		if scandals_today > 0:
-			text += "[color=red]Pundits replay your debate gaffes in slow motion. With a laugh track.[/color]\n\n"
+			lead_in = "Our top story: pundits are replaying tonight's debate gaffes in slow motion. With a laugh track. We'll show it eleven more times after the break."
 		else:
-			text += "[color=green]Pundits agree you 'held the stage' and 'did not visibly sweat.' High praise.[/color]\n\n"
+			lead_in = "Our top story: pundits agree the challenger 'held the stage' and 'did not visibly sweat.' In this market, that's a landslide of praise."
 
-	for headline in headlines:
-		var color := "white"
-		match headline.tone:
-			"positive": color = "green"
-			"negative": color = "red"
-		text += "[color=%s]▶ %s[/color]\n" % [color, headline.headline]
-		text += "  %s\n\n" % headline.body
-
-	activity_text.text = text
-	_clear_choices()
-	next_day_button.text = "CONTINUE"
-	next_day_button.disabled = false
+	news_broadcast.begin(NewsSystem.generate_daily_news(), GameManager.current_day, lead_in)
 
 
 func _continue_from_news() -> void:
@@ -976,8 +1077,14 @@ func _continue_from_news() -> void:
 	current_npc_id = ""
 	_setup_day()
 	if GameManager.current_day == 7:
-		_show_flavor("Election Day", "[b]It's Election Day.[/b]\n\nThe polls are open. Your stomach is closed.\n\nHead to the Town Square stage when you're ready to face the count.")
+		if _is_tutorial_run() and not GameManager.get_run_flag("tutorial_day_7_seen"):
+			GameManager.set_run_flag("tutorial_day_7_seen", true)
+			_show_flavor("CAMPAIGN MANUAL — DAY 7", TUTORIAL_TIPS[7])
+		else:
+			_show_flavor("Election Day", "[b]It's Election Day.[/b]\n\nThe polls are open. Your stomach is closed.\n\nHead to the Town Square stage when you're ready to face the count.")
 		day_complete = true
+	else:
+		_run_day_intro.call_deferred()
 
 
 # ------------------------------------------------------------------ panel helpers

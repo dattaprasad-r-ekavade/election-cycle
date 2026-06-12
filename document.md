@@ -1,7 +1,7 @@
 # ELECTION CYCLE
 ## Game Design Document v2.0
 **Last Updated:** January 17, 2026  
-**Target Release:** November 2026  
+**Target Release:** November 3, 2026 — US Midterm Election Day  
 **Revenue Target:** $10,000 USD (Year 1)
 
 ---
@@ -78,34 +78,58 @@ The player is a **cynical political operative** running for local office. They k
 - Skill checks create tension
 - Debate = dramatic finale
 
-## Revenue Model: $10,000 Year 1
+## Revenue Model: Tiered Milestones (updated June 2026)
 
 ### Pricing Strategy
 | Price Point | Rationale |
 |-------------|-----------|
-| **$12.99 USD** | Sweet spot for indie roguelites |
-| Launch discount: **$9.99 (23% off)** | Drives launch week buys |
-| Sale floor: **$6.49 (50% off)** | Steam seasonal sales |
+| **$9.99 USD** | Honest price for current content depth; better review insurance than $12.99 |
+| Launch discount: **$8.49 (15% off)** | Drives launch week buys without anchoring too low |
+| Sale floor: **$4.99 (50% off)** | Steam seasonal sales |
+| Raise to $12.99 later | Only after a major content update earns it |
 
-### Sales Math
-| Scenario | Price | Units Needed | Steam Cut (30%) | Net to Dev |
-|----------|-------|--------------|-----------------|------------|
-| All full price | $12.99 | 1,100 | $4,290 | $10,000 |
-| Mixed (avg $9) | $9.00 | 1,590 | $4,770 | $10,000 |
-| All on sale | $6.49 | 2,200 | $4,290 | $10,000 |
+### Milestone Ladder
+Steam's $100 Direct fee is recouped automatically once the game reaches
+**$1,000 Adjusted Gross Revenue** (sales minus refunds/chargebacks). That is
+Milestone 1 — everything before it is funnel-building.
 
-**Realistic target: ~1,500-2,000 copies Year 1**
+| # | Milestone | Number | What it means |
+|---|-----------|--------|---------------|
+| M0 | **Ballot Access** | Steam page live + 1,000 wishlists | The game exists publicly; algorithm starts working |
+| M1 | **Deposit Returned** | ~120 copies ≈ $1,000 AGR | $100 fee recouped + ~$600-700 paid out. "Made it back, and then some." |
+| M2 | **Beat the Median** | ~450 copies ≈ $2,500 net | Outperformed the typical 2025 indie debut by ~10x |
+| M3 | **Real Money** | ~900 copies ≈ $5,000 net | Half the original target; funds the next content update |
+| M4 | **The Plan Worked** | ~1,800 copies ≈ $10,000 net | Original document.md target; requires 12,000-18,000 wishlists |
 
-### Wishlist Strategy
+Copy counts assume ~$9 average realized price, ~10% refunds, regional pricing.
+Non-US developers: US tax treaty withholding may reduce the net payout — file
+the W-8BEN in Steamworks early.
+
+### Launch Strategy: Ride the US Midterms 🇺🇸
+US midterm Election Day is **Tuesday, November 3, 2026**. A satirical election
+game launching ON election day is free marketing — every player, streamer, and
+journalist is already thinking about elections that week.
+
 | Milestone | Target Date | Goal |
 |-----------|-------------|------|
-| Steam page live | August 2026 | Start collecting |
-| Demo release | September 2026 | Convert wishlists |
-| Launch | November 2026 | 2,000+ wishlists |
+| Steam page live | **mid-July 2026** | Start collecting wishlists NOW — every week compounds |
+| Content lock (audio, debate pool x4, 30+ scenarios/type) | September 15, 2026 | Demo-ready quality |
+| Demo live ("Primary Season" — Days 1-3) | early October 2026 | Convert page visits |
+| **Steam Next Fest** | **October 19-26, 2026** | Biggest free wishlist event; demo front and center |
+| **LAUNCH: US Election Day** | **November 3, 2026** | "The polls are open." Ride the news cycle |
+| Post-launch patch + first sale | December 2026 | Winter Sale visibility |
 
-**Industry average:** 10-20% of wishlists convert at launch.  
-**Need:** 10,000-20,000 wishlists for safe $10k.  
-**Achievable via:** Streamer coverage, Reddit, Twitter/X, demo virality.
+**Conversion reality (2025 data):** median first-week conversion is ~0.10-0.15x
+wishlists for games in this price range — plan around 10%, not 20%.
+**Need:** 12,000-18,000 wishlists for a safe M4; ~1,500 for a safe M1.
+**Achievable via:** Next Fest demo, election-week streamer keys (political
+comedy + roguelite channels), shareable end-of-run "election report card"
+images, Reddit/TikTok clips of critical-fail moments.
+
+**Content note for the midterm angle:** keep all candidates fictional and the
+satire bipartisan ("everyone is flawed" stays the rule). The election-day hook
+works because of timing, not partisanship — and it keeps streamers comfortable
+playing it on camera.
 
 ---
 

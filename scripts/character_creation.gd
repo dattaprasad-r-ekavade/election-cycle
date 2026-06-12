@@ -21,6 +21,7 @@ var seed_label: Label
 var seed_input: LineEdit
 var seed_randomize_btn: Button
 var seed_container: HBoxContainer
+var remix_container: VBoxContainer
 
 var skill_rows: Dictionary = {}
 
@@ -37,9 +38,13 @@ func _ready() -> void:
 
 	# Create seed UI
 	_create_seed_ui()
+	_create_remix_ui()
 	_update_seed_display()
-	if GameManager.play_mode == "campaign" and seed_container:
-		seed_container.visible = false
+	if GameManager.play_mode == "campaign":
+		if seed_container:
+			seed_container.visible = false
+		if remix_container:
+			remix_container.visible = false
 
 	_update_district_info()
 	_create_skill_rows()
@@ -104,6 +109,55 @@ func _create_seed_ui() -> void:
 	var slogan_idx := slogan_input.get_index()
 	left_vbox.add_child(seed_container)
 	left_vbox.move_child(seed_container, slogan_idx + 1)
+
+
+func _create_remix_ui() -> void:
+	"""Roguelike remix: reroll individual run components while keeping the rest.
+	Theme/town, crisis, opponent, and town layout each have their own seed."""
+	var left_vbox: VBoxContainer = $MarginContainer/VBox/ContentHBox/LeftPanel/LeftMargin/LeftVBox
+
+	remix_container = VBoxContainer.new()
+	remix_container.name = "RemixContainer"
+
+	var title := Label.new()
+	title.text = "DISTRICT REMIX — reroll the parts you don't like:"
+	title.add_theme_font_size_override("font_size", 11)
+	title.add_theme_color_override("font_color", Color(0.75, 0.8, 0.9))
+	remix_container.add_child(title)
+
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+	remix_container.add_child(row)
+
+	var remix_defs := [
+		["theme", "🎲 TOWN", "Reroll the district theme and name (changes the map's look)"],
+		["crisis", "🎲 CRISIS", "Reroll the local crisis"],
+		["opponent", "🎲 RIVAL", "Reroll your opponent"],
+		["layout", "🎲 STREETS", "Reroll the town layout (same theme, new streets)"],
+		["params", "🎲 FATE", "Reroll the hidden election conditions. Risky. Mysterious. Fun."],
+	]
+	for def in remix_defs:
+		var btn := Button.new()
+		btn.text = def[1]
+		btn.tooltip_text = def[2]
+		btn.custom_minimum_size = Vector2(0, 32)
+		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		btn.pressed.connect(_on_reroll_component.bind(String(def[0])))
+		row.add_child(btn)
+
+	# Insert right after the seed container
+	left_vbox.add_child(remix_container)
+	if seed_container:
+		left_vbox.move_child(remix_container, seed_container.get_index() + 1)
+
+
+func _on_reroll_component(component: String) -> void:
+	GameManager.reroll_component(component)
+	_update_district_info()
+	if component == "layout":
+		subheader_label.text = "\"New streets, same problems. The town layout has been reshuffled.\""
+	elif component == "params":
+		subheader_label.text = "\"Somewhere, the weather changes. The economy shivers. You feel nothing.\""
 
 
 func _update_seed_display() -> void:

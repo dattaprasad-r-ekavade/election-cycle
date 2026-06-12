@@ -122,8 +122,35 @@ func _cell_to_pos(cell: Vector2i) -> Vector2:
 	return Vector2(cell.x * cell_size, cell.y * cell_size)
 
 
+const ZOOM_DEFAULT := 1.45
+const ZOOM_MIN := 1.0
+const ZOOM_MAX := 2.0
+const ZOOM_STEP := 0.15
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	# Camera zoom: mouse wheel or +/- keys.
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			_adjust_zoom(ZOOM_STEP)
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			_adjust_zoom(-ZOOM_STEP)
+	elif event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_EQUAL or event.keycode == KEY_KP_ADD:
+			_adjust_zoom(ZOOM_STEP)
+		elif event.keycode == KEY_MINUS or event.keycode == KEY_KP_SUBTRACT:
+			_adjust_zoom(-ZOOM_STEP)
+
+
+func _adjust_zoom(delta: float) -> void:
+	var z: float = clampf(camera.zoom.x + delta, ZOOM_MIN, ZOOM_MAX)
+	var tw := create_tween()
+	tw.tween_property(camera, "zoom", Vector2(z, z), 0.12)
+
+
 func _setup_camera_limits() -> void:
 	camera.make_current()
+	camera.zoom = Vector2(ZOOM_DEFAULT, ZOOM_DEFAULT)
 	camera.position_smoothing_enabled = true
 	camera.position_smoothing_speed = 8.0
 	camera.limit_left = bounds_min.x * cell_size

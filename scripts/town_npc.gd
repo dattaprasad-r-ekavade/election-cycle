@@ -78,6 +78,60 @@ func _try_wander() -> void:
 	)
 
 
+func step_to(target: Vector2i, duration: float = 0.28) -> void:
+	"""Scripted single-cell move used by cutscenes (ignores wander logic)."""
+	var dir := target - grid_cell
+	if dir != Vector2i.ZERO:
+		avatar.facing = Vector2i(signi(dir.x), 0) if absi(dir.x) >= absi(dir.y) else Vector2i(0, signi(dir.y))
+	avatar.moving = true
+	_is_moving = true
+	grid_cell = target
+	var tw := create_tween()
+	tw.tween_property(self, "position", Vector2(target.x * CELL, target.y * CELL), duration)
+	await tw.finished
+	_is_moving = false
+	avatar.moving = false
+
+
+func walk_to(target: Vector2i, max_steps: int = 24) -> bool:
+	"""Walk one cell at a time toward target (greedy with axis fallback).
+	Returns true if the target cell was reached."""
+	var steps := 0
+	while grid_cell != target and steps < max_steps:
+		steps += 1
+		var delta := target - grid_cell
+		var options: Array = []
+		if absi(delta.x) >= absi(delta.y):
+			if delta.x != 0:
+				options.append(Vector2i(signi(delta.x), 0))
+			if delta.y != 0:
+				options.append(Vector2i(0, signi(delta.y)))
+		else:
+			if delta.y != 0:
+				options.append(Vector2i(0, signi(delta.y)))
+			if delta.x != 0:
+				options.append(Vector2i(signi(delta.x), 0))
+		# sidestep fallbacks
+		options.append(Vector2i(0, 1))
+		options.append(Vector2i(1, 0))
+		options.append(Vector2i(0, -1))
+		options.append(Vector2i(-1, 0))
+
+		var moved := false
+		for dir in options:
+			var next: Vector2i = grid_cell + dir
+			if walkable_check.is_valid() and not walkable_check.call(next):
+				continue
+			if occupied_check.is_valid() and occupied_check.call(next, self):
+				continue
+			await step_to(next)
+			moved = true
+			break
+		if not moved:
+			return false
+	return grid_cell == target
+
+
 func face_towards(cell: Vector2i) -> void:
 	var d := cell - grid_cell
 	if absi(d.x) >= absi(d.y):

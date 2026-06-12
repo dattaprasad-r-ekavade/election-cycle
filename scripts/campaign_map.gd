@@ -179,6 +179,8 @@ func _select_scenario(sid: String) -> void:
 	info_title.text = String(s.get("title", ""))
 
 	var body := ""
+	if bool(s.get("tutorial", false)):
+		body += "[color=aqua][b]TRAINING CAMPAIGN[/b] — learn the ropes here. Mom insists.[/color]\n\n"
 	body += "[b]District:[/b] %s\n" % s.get("district_name", "?")
 	body += "[b]Crisis:[/b] %s\n\n" % s.get("main_crisis", "?")
 	body += "[b]Opponent:[/b] %s\n" % s.get("opponent_name", "?")
